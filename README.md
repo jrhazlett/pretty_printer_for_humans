@@ -107,7 +107,7 @@ const inputData = {
 const result = await prettyPrinterForHumans.pformatAsyncSingleThread(
     inputData,
     {
-        argEnumSortOption: HelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
+        argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
         argStringNameToOutput: "result",
     },
 )
@@ -143,7 +143,7 @@ NOTE: This string will never indent.
 const result = await prettyPrinterForHumans.pformatAsyncSingleThread(
     [ 1, 2, Error( "3" ), ],
     {
-        argEnumSortOption: HelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
+        argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
         argStringNameToOutput: "result",
     },
 )
@@ -190,7 +190,7 @@ const result = prettyPrinterForHumans.pformatSync(
     "string" : "testString",
   },
   {
-    argEnumSortOption: HelperOptions.fieldEnumSortOptions.fieldOptionPrintComplexLast,
+    argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintComplexLast,
     argStringNameToOutput: "result",
   },
 )
@@ -232,7 +232,7 @@ const result = prettyPrinterForHumans.pformatSync(
     "string" : "testString",
   },
   {
-    argEnumSortOption: HelperOptions.fieldEnumSortOptions.fieldOptionPrintComplexLast,
+    argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintComplexLast,
     argStringNameToOutput: "result",
   },
 )
