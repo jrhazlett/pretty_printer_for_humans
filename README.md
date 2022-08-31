@@ -6,6 +6,8 @@ Email: james.hazlett.npm@gmail.com
 
 License: MIT
 
+Github: https://github.com/jrhazlett/pretty_printer_for_humans
+
 ---
 
 "Stare at the data long enough, and sometimes the data stares back."
@@ -89,6 +91,8 @@ NOTE: This attribute will NOT appear in the string returned by pformatSync() in 
 ### argBoolPrintWarningOnCircularReference
 
 ```
+import prettyPrinterForHumans from "pretty_printer_for_humans";
+
 const objectCircularReference = { F: 6 };
 
 objectCircularReference["actualReference"] = objectCircularReference;
@@ -140,6 +144,8 @@ NOTE: This string will never indent.
 ##### Example
 
 ```
+import prettyPrinterForHumans from "pretty_printer_for_humans";
+
 const result = await prettyPrinterForHumans.pformatAsyncSingleThread(
     [ 1, 2, Error( "3" ), ],
     {
@@ -181,6 +187,8 @@ This prints all keys in order. Array indexes are displayed in numerical order. O
 alphabetical order, and is **not** case-sensitive.
 
 ```
+import prettyPrinterForHumans from "pretty_printer_for_humans";
+
 const result = prettyPrinterForHumans.pformatSync(
   {
     "object" : { "object.0" : 0, "object.1" : 1, "object.2" : 2, },
@@ -223,6 +231,8 @@ This also prints keys in alphabetical order **but** it distinguishes between val
 The values with children print at the bottom of a given layer.
 
 ```
+import prettyPrinterForHumans from "pretty_printer_for_humans";
+
 const result = prettyPrinterForHumans.pformatSync(
 {
     "object" : { "object.0" : 0, "object.1" : 1, "object.2" : 2, },
@@ -281,6 +291,8 @@ If the number exceeds the depth of the argument, then this will result in the en
 NOTE: Any value <= 1 will provide the same output.
 
 ```
+import prettyPrinterForHumans from "pretty_printer_for_humans";
+
 const result = prettyPrinterForHumans.pformatSync(
   [ "zero", "one", "two", "three", [ "four", "five", "six", ], ],
   {
