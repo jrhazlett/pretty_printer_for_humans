@@ -11,16 +11,16 @@ Their scope is limited to the stack and all processing sub-functions. Once all t
 execution, the number of references should drop to zero.
 */
 export default class HelperObjectForStack {
-    /**
-     * @param {number} argIntDataType
-     * @param {number} argIntLayersIn
-     * @param {any} argKey
-     * @param {any} argValue
-     * */
-    constructor(argIntDataType, argIntLayersIn, argKey, argValue) {
-        this.fieldIntDataType = argIntDataType;
-        this.fieldIntLayersIn = argIntLayersIn;
-        this.fieldKey = argKey;
-        this.fieldValue = argValue;
-    }
+  /**
+   * @param {number} argIntDataType
+   * @param {number} argIntLayersIn
+   * @param {any} argKey
+   * @param {any} argValue
+   * */
+  constructor(argIntDataType, argIntLayersIn, argKey, argValue) {
+    this.fieldIntDataType = argIntDataType;
+    this.fieldIntLayersIn = argIntLayersIn;
+    this.fieldKey = argKey;
+    this.fieldValue = argValue;
+  }
 }

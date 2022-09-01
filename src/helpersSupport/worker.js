@@ -9,10 +9,10 @@ import prettyPrinterForHumans from "../prettyPrinterForHumans.js";
 // NOTE: This runs on the 2nd thread
 //
 parentPort.once(`message`, (argMessageReceived) =>
-    parentPort.postMessage(
-        prettyPrinterForHumans.pformatSync(
-            argMessageReceived.arg,
-            argMessageReceived.argHelperOptions
-        )
+  parentPort.postMessage(
+    prettyPrinterForHumans.pformatSync(
+      argMessageReceived.arg,
+      argMessageReceived.argHelperOptions
     )
+  )
 );

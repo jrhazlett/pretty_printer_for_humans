@@ -18,25 +18,17 @@ to the right place.
 
 Top features:
 
--   Automatic indentation
--   Auto-sort all keys ( can also sort data so complex objects display below simple entries )
--   No recursion limit
--   No external dependencies
--   Auto-handles circular references by default
--   Multi-threading support
--   Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
+- Automatic indentation
+- Auto-sort all keys ( can also sort data so complex objects display below simple entries )
+- No recursion limit
+- No external dependencies
+- Auto-handles circular references by default
+- Multi-threading support
+- Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
 
 ## Notes on data safety
 
-The **only** change this library might do to an incoming argument is add an attribute for preventing infinite loops
-due to circular references.
-
-Attribute name:
-`____zzzPrettyPrinterIdForObjectForHumans____`
-
-This is the **_only_** potential change and there's a function for reversing it.
-
-This is explained in more detail in the section on handling circular references.
+This library doesn't make any changes to the input.
 
 ## To install...
 
@@ -44,11 +36,11 @@ npm i pretty_printer_for_humans
 
 ## Definitions
 
--   'The stack' - When I refer to this, I mean the custom stack used to process the entire data packages in
-    prettyPrinterForHumans.
--   'The main function' - This refers to pformatSync() if its not clear within the context of its use.
--   'Function' - Technically every 'function' in this library is a method, but I think more people will understand
-    'function' than method.
+- 'The stack' - When I refer to this, I mean the custom stack used to process the entire data packages in
+  prettyPrinterForHumans.
+- 'The main function' - This refers to pformatSync() if its not clear within the context of its use.
+- 'Function' - Technically every 'function' in this library is a method, but I think more people will understand
+  'function' than method.
 
 ## To import
 
@@ -76,14 +68,11 @@ functions.
 
 #### argBoolHandleCircularReferences
 
-If true, this option prevents infinite loops due to circular references. It does this by adding a tracking id property,
-and storing it in a set. If the id already exists in the set at a later point then the script will not process that
-reference a 2nd time.
+If true, this option prevents infinite loops due to circular references. It does this by adding an object, and storing
+it in a set. If the id already exists in the set at a later point then the script will not process that reference a 2nd
+time.
 
-NOTE: The tracking attribute is hard-coded to be this:
-`____zzzPrettyPrinterIdForObjectForHumans____`
-
-Yes, it intentionally breaks the '\_\_' style rule, and is wordy on purpose. The point is for this to avoid colliding
+Yes, it intentionally breaks the `__` style rule, and is wordy on purpose. The point is for this to avoid colliding
 with any pre-existing properties in the data.
 
 NOTE: This attribute will NOT appear in the string returned by pformatSync() in ALL cases.
@@ -390,11 +379,11 @@ is to keep from colliding any recursion limits, and is generally more processing
 Each object popped off the stack contains a value. The printer checks various attributes for a couple of
 characteristics:
 
--   Is the value an array?
--   Is the value an object?
--   Is the value an error object?
--   Is the value a promise?
--   Is the value a basic type? (ie string or number)
+- Is the value an array?
+- Is the value an object?
+- Is the value an error object?
+- Is the value a promise?
+- Is the value a basic type? (ie string or number)
 
 If the value is either an array or a basic object, then the printer will check it for children and move those to the
 stack for processing.
@@ -416,14 +405,14 @@ underscores, rather than two).
 
 ## Optimizations
 
--   'static' is used whenever possible; this keeps various defs down to one memory entry.
--   If the anticipated array's size is known ahead of time, then its defined immediately.
--   For loops store array lengths ahead of iterating ( objects also benefit from their equivalent ).
--   Different approaches were benchmarked, and the code reflects the fastest approach tested.
--   An independent stack is used for recursion; This cuts out a lot of processing overhead, and prevents running into
-    the limit.
--   Switch statements are used whenever possible.
--   Repeating comparisons rely on ints rather than re-evaluating values / scanning strings.
+- 'static' is used whenever possible; this keeps various defs down to one memory entry.
+- If the anticipated array's size is known ahead of time, then its defined immediately.
+- For loops store array lengths ahead of iterating ( objects also benefit from their equivalent ).
+- Different approaches were benchmarked, and the code reflects the fastest approach tested.
+- An independent stack is used for recursion; This cuts out a lot of processing overhead, and prevents running into
+  the limit.
+- Switch statements are used whenever possible.
+- Repeating comparisons rely on ints rather than re-evaluating values / scanning strings.
 
 #### Garbage collection / memory leaks
 
@@ -449,8 +438,8 @@ the actual pformatSync() function, rather than being distributed across multiple
 
 This is both the primary interface for the library and where it manages:
 
--   The overall stack
--   Formatting for output
+- The overall stack
+- Formatting for output
 
 #### src/helpersPrettyPrinter/helperOptions.js
 
@@ -478,29 +467,29 @@ everything follows these formats:
 
 Classes:
 
--   Name outline: ( 'H/helper' )( descriptive name )
--   All have 'helper' at the beginning. If the 'H' is captialized, then its meant to be instantiated, otherwise its
-    static.
--   Classes exist in pretty much all helper modules. The reason for this is to avoid order-sensitive execution, which
-    makes reading the code later messy if this isn't done ahead of time.
+- Name outline: ( 'H/helper' )( descriptive name )
+- All have 'helper' at the beginning. If the 'H' is captialized, then its meant to be instantiated, otherwise its
+  static.
+- Classes exist in pretty much all helper modules. The reason for this is to avoid order-sensitive execution, which
+  makes reading the code later messy if this isn't done ahead of time.
 
 Functions / Methods:
 
--   Name outline: ( verb )( data type )( descriptive name ).
--   The verb tends to be: get / load (into object) / pop / set.
--   If a public function doesn't seem to return anything, then I usually set it to return 'this' by default, to support
-    chaining calls.
+- Name outline: ( verb )( data type )( descriptive name ).
+- The verb tends to be: get / load (into object) / pop / set.
+- If a public function doesn't seem to return anything, then I usually set it to return 'this' by default, to support
+  chaining calls.
 
 Variables:
 
--   Name outline: ( arg / item? )( data type )( descriptive name ).
--   The 'arg' prefix is meant to identify function arguments within function blocks.
--   'item' is a keyword I like using to indicate if a variable is expected to be unique for each loop iteration
--   Intended data types are included in variables names because IDEs typically show these in tool tips. Actual
-    desciption blocks usually require more steps to view. This is very much intended to be a: "Let the software handle
-    the minutae" philosophy.
--   If the data type isn't mentioned, then the variable is meant to be 'any'.
--   Any argument that ends with 'ToUpdate' will be changed during the execution of the associated function.
+- Name outline: ( arg / item? )( data type )( descriptive name ).
+- The 'arg' prefix is meant to identify function arguments within function blocks.
+- 'item' is a keyword I like using to indicate if a variable is expected to be unique for each loop iteration
+- Intended data types are included in variables names because IDEs typically show these in tool tips. Actual
+  desciption blocks usually require more steps to view. This is very much intended to be a: "Let the software handle
+  the minutae" philosophy.
+- If the data type isn't mentioned, then the variable is meant to be 'any'.
+- Any argument that ends with 'ToUpdate' will be changed during the execution of the associated function.
 
 ## Questions
 

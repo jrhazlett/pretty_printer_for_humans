@@ -16,192 +16,192 @@ import helperFormatting from "../helpersSupport/helperFormatting.js";
 import HelperObjectForStack from "../helpersSupport/helperObjectForStack.js";
 
 export default class helperProcessChildComplexLast {
-    /**
-     * @param {[]} argArrayStackToUpdate
-     * @param {HelperCircularReferences} argHelperCircularReferences
-     * @param {HelperOptions} argHelperOptions
-     * @param {HelperObjectForStack} argObjectChildForStack
-     * @param {HelperObjectForStack} argObjectFromStack
-     * */
-    static processChild = (
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        argObjectChildForStack,
-        argObjectFromStack
-    ) => {
-        switch (argObjectChildForStack.fieldIntDataType) {
-            //
-            // Array
-            //
-            case helperEnumDataTypes.fieldArray:
-                //
-                // If int layers are defined, then print a summary value
-                //
-                if (
-                    helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
-                        argArrayStackToUpdate,
-                        argHelperOptions,
-                        argObjectFromStack,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `[ ... ]`
-                    )
-                ) {
-                    return;
-                }
-
-                if (argHelperCircularReferences) {
-                    if (
-                        argHelperCircularReferences.updateStackWithCircularReferenceMessage(
-                            argArrayStackToUpdate,
-                            argObjectChildForStack,
-                            argObjectFromStack
-                        )
-                    ) {
-                        return;
-                    }
-                }
-                //
-                // Append closure to stack for processing
-                //
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldEitherNonIterableOrString,
-                        argObjectFromStack.fieldIntLayersIn,
-                        ``,
-                        `]`
-                    )
-                );
-                //
-                // Append content to stack for processing
-                //
-                argArrayStackToUpdate.push(argObjectChildForStack);
-                //
-                // Append opener to stack for processing
-                //
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldEitherNonIterableOrString,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `[`
-                    )
-                );
-                break;
-            //
-            // Object
-            //
-            case helperEnumDataTypes.fieldObject:
-                //
-                // If int layers are defined, then print a summary value
-                //
-                if (
-                    helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
-                        argArrayStackToUpdate,
-                        argHelperOptions,
-                        argObjectFromStack,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `{ ... }`
-                    )
-                ) {
-                    return;
-                }
-
-                if (argHelperCircularReferences) {
-                    if (
-                        argHelperCircularReferences.updateStackWithCircularReferenceMessage(
-                            argArrayStackToUpdate,
-                            argObjectChildForStack,
-                            argObjectFromStack
-                        )
-                    ) {
-                        return;
-                    }
-                }
-                //
-                // Append closure to stack for processing
-                //
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldEitherNonIterableOrString,
-                        argObjectFromStack.fieldIntLayersIn,
-                        ``,
-                        `}`
-                    )
-                );
-                //
-                // Append content to stack for processing
-                //
-                argArrayStackToUpdate.push(argObjectChildForStack);
-                //
-                // Append opener to stack for processing
-                //
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldEitherNonIterableOrString,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `{`
-                    )
-                );
-                break;
-            //
-            // Error
-            //
-            case helperEnumDataTypes.fieldError:
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldError,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `${argObjectChildForStack.fieldValue}`
-                    )
-                );
-                break;
-            //
-            // Function
-            //
-            case helperEnumDataTypes.fieldFunction:
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldFunction,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        helperFormatting.getStringFunctionSignature(
-                            argObjectChildForStack.fieldValue
-                        )
-                    )
-                );
-                break;
-            //
-            // Promise
-            //
-            case helperEnumDataTypes.fieldPromise:
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldPromise,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `${argObjectChildForStack.fieldValue}`
-                    )
-                );
-                break;
-            //
-            // Non-iterable (incl. strings)
-            //
-            default:
-                //
-                // Print content to output
-                //
-                argArrayStackToUpdate.push(
-                    new HelperObjectForStack(
-                        helperEnumDataTypes.fieldEitherNonIterableOrString,
-                        argObjectFromStack.fieldIntLayersIn,
-                        `${argObjectChildForStack.fieldKey}`,
-                        `${argObjectChildForStack.fieldValue}`
-                    )
-                );
-                break;
+  /**
+   * @param {[]} argArrayStackToUpdate
+   * @param {HelperCircularReferences} argHelperCircularReferences
+   * @param {HelperOptions} argHelperOptions
+   * @param {HelperObjectForStack} argObjectChildForStack
+   * @param {HelperObjectForStack} argObjectFromStack
+   * */
+  static processChild = (
+    argArrayStackToUpdate,
+    argHelperCircularReferences,
+    argHelperOptions,
+    argObjectChildForStack,
+    argObjectFromStack
+  ) => {
+    switch (argObjectChildForStack.fieldIntDataType) {
+      //
+      // Array
+      //
+      case helperEnumDataTypes.fieldArray:
+        //
+        // If int layers are defined, then print a summary value
+        //
+        if (
+          helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
+            argArrayStackToUpdate,
+            argHelperOptions,
+            argObjectFromStack,
+            `${argObjectChildForStack.fieldKey}`,
+            `[ ... ]`
+          )
+        ) {
+          return;
         }
-    };
+
+        if (argHelperCircularReferences) {
+          if (
+            argHelperCircularReferences.updateStackWithCircularReferenceMessage(
+              argArrayStackToUpdate,
+              argObjectChildForStack,
+              argObjectFromStack
+            )
+          ) {
+            return;
+          }
+        }
+        //
+        // Append closure to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            ``,
+            `]`
+          )
+        );
+        //
+        // Append content to stack for processing
+        //
+        argArrayStackToUpdate.push(argObjectChildForStack);
+        //
+        // Append opener to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `[`
+          )
+        );
+        break;
+      //
+      // Object
+      //
+      case helperEnumDataTypes.fieldObject:
+        //
+        // If int layers are defined, then print a summary value
+        //
+        if (
+          helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
+            argArrayStackToUpdate,
+            argHelperOptions,
+            argObjectFromStack,
+            `${argObjectChildForStack.fieldKey}`,
+            `{ ... }`
+          )
+        ) {
+          return;
+        }
+
+        if (argHelperCircularReferences) {
+          if (
+            argHelperCircularReferences.updateStackWithCircularReferenceMessage(
+              argArrayStackToUpdate,
+              argObjectChildForStack,
+              argObjectFromStack
+            )
+          ) {
+            return;
+          }
+        }
+        //
+        // Append closure to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            ``,
+            `}`
+          )
+        );
+        //
+        // Append content to stack for processing
+        //
+        argArrayStackToUpdate.push(argObjectChildForStack);
+        //
+        // Append opener to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `{`
+          )
+        );
+        break;
+      //
+      // Error
+      //
+      case helperEnumDataTypes.fieldError:
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldError,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `${argObjectChildForStack.fieldValue}`
+          )
+        );
+        break;
+      //
+      // Function
+      //
+      case helperEnumDataTypes.fieldFunction:
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldFunction,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            helperFormatting.getStringFunctionSignature(
+              argObjectChildForStack.fieldValue
+            )
+          )
+        );
+        break;
+      //
+      // Promise
+      //
+      case helperEnumDataTypes.fieldPromise:
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldPromise,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `${argObjectChildForStack.fieldValue}`
+          )
+        );
+        break;
+      //
+      // Non-iterable (incl. strings)
+      //
+      default:
+        //
+        // Print content to output
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `${argObjectChildForStack.fieldValue}`
+          )
+        );
+        break;
+    }
+  };
 }
