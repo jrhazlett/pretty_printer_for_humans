@@ -9,6 +9,14 @@ License: MIT
 Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ---
+Updates and fixes:
+
+Ver. 1.0.5
+-Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
+blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
+`pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
+-Fixed pathing issue where worker path didn't work for library installs.
+---
 
 "Stare at the data long enough, and sometimes the data stares back."
 
@@ -325,7 +333,7 @@ whatever is printed next, but the value for this can be any string.
 
 NOTE: All these functions take the same arguments as pformatSync()
 
-### Methods that expand on pformatSync()
+### Functions that expand on pformatSync()
 
 `pformatAsyncSingleThread( arg, { /*options*/ } )`
 
@@ -334,11 +342,13 @@ wrapper to prevent code blocking.
 
 `pformatAsyncMultiThreaded( arg, { /*options*/ } )`
 
-This takes the same 'arg' and options as the original function. This is also async, and will run the string processing
-in its own processing thread via a web worker.
+WARNING: This function is not importable through the root prettyPrinterForHumans library, and instead uses its own 
+import. This is so users can run the library in non-Nodejs environments.
 
-WARNING:
-Any limitations specific to workers still apply. ( ie attempting to clone functions / functions )
+This takes the same 'arg' and options as the sync function. This shifts `pformatSync()`'s workload to a 2nd thread.
+
+WARNING: Any limitations specific to workers still apply. ( ie attempting to clone functions, and environmental 
+limitations )
 
 The library doesn't attempt to serialize the data ahead of time because this would mean either cloning the data
 structure, which would defeat the point of using another thread, or it would require editing the argument itself,
@@ -346,6 +356,33 @@ which would cause data loss.
 
 The library also doesn't attempt error handling here, because some forums claim symbols can't be passed to workers,
 but in my tests, this doesn't appear to be an issue. This pretty much says to me 'moving target.'
+
+```
+import prettyPrinterForHumansMultiThreading from
+        "./src/prettyPrinterForHumansMultiThreading/prettyPrinterForHumansMultiThreading.js";
+
+const result = await prettyPrinterForHumansMultiThreading.pformatAsyncMultiThreaded(
+    {
+        "2" : 2,
+        "3" : 3,
+        "1" : 1,
+    },
+    {
+        argStringNameToOutput: "result",
+        argEnumSortOption:
+            prettyPrinterForHumansMultiThreading.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
+    },
+)
+
+// Output if printed
+
+result =
+{
+    1 : 1,
+    2 : 2,
+    3 : 3,
+}
+```
 
 `pprint( arg, { /*options*/ } )`
 

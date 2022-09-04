@@ -3,6 +3,7 @@
 run*.sh
 
 **/.DS_Store
+**/aaa*/
 
 # Logs
 logs

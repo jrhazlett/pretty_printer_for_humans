@@ -71,55 +71,109 @@ export default class helperFormatting {
   };
 
   /**
+   * @param {[]} argArrayOfStringsOutput
    * @param {[]} argArrayStackToProcess
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * @returns string
    * */
   static getStringPrefixWhitespacePlusValuePlusComma = (
+    argArrayOfStringsOutput,
     argArrayStackToProcess,
     argHelperOptions,
     argObjectFromStack
-  ) =>
-    helperFormatting._getStringPlusComma(
-      argArrayStackToProcess,
-      argHelperOptions.argStringIndentation.repeat(
-        argObjectFromStack.fieldIntLayersIn + 1
-      ) + argObjectFromStack.fieldValue
-    );
+  ) => {
+    if (
+      helperFormatting._isSingleItemObject(
+        argArrayOfStringsOutput,
+        argArrayStackToProcess
+      )
+    ) {
+      return argObjectFromStack.fieldValue;
+    } else {
+      return helperFormatting._getStringPlusComma(
+        argArrayOfStringsOutput,
+        argArrayStackToProcess,
+        argHelperOptions.argStringIndentation.repeat(
+          argObjectFromStack.fieldIntLayersIn + 1
+        ) + argObjectFromStack.fieldValue
+      );
+    }
+  };
 
   /**
+   * @param {[]} argArrayOfStringsOutput
    * @param {[]} argArrayStackToProcess
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * @returns string
    * */
   static getStringWhitespacePlusKeyPlusValuePlusComma = (
+    argArrayOfStringsOutput,
     argArrayStackToProcess,
     argHelperOptions,
     argObjectFromStack
-  ) =>
-    helperFormatting._getStringPlusComma(
-      argArrayStackToProcess,
-      argHelperOptions.argStringIndentation.repeat(
-        argObjectFromStack.fieldIntLayersIn + 1
-      ) +
-        argObjectFromStack.fieldKey +
-        " : " +
-        argObjectFromStack.fieldValue
+  ) => {
+    if (
+      helperFormatting._isSingleItemObject(
+        argArrayOfStringsOutput,
+        argArrayStackToProcess
+      )
+    ) {
+      return argObjectFromStack.fieldValue;
+    } else {
+      return helperFormatting._getStringPlusComma(
+        argArrayOfStringsOutput,
+        argArrayStackToProcess,
+        argHelperOptions.argStringIndentation.repeat(
+          argObjectFromStack.fieldIntLayersIn + 1
+        ) +
+          argObjectFromStack.fieldKey +
+          " : " +
+          argObjectFromStack.fieldValue
+      );
+    }
+  };
+
+  /**
+   * @param {[]} argArrayOfStringsOutput
+   * @param {[]} argArrayStackToProcess
+   * @returns boolean
+   * */
+  static _isSingleItemObject = (
+    argArrayOfStringsOutput,
+    argArrayStackToProcess
+  ) => {
+    return (
+      argArrayOfStringsOutput.length === 0 &&
+      argArrayStackToProcess.length === 1
     );
+  };
 
   static regexIsClosure = new RegExp("/[" + "[" + "{" + "]{1}$/g");
 
   /**
+   * @param {[]} argArrayOfStringsOutput
    * @param {[]} argArrayStackToProcess
    * @param {string} argString
    * */
-  static _getStringPlusComma = (argArrayStackToProcess, argString) =>
-    argArrayStackToProcess.length > 0 &&
-    !helperFormatting.regexIsClosure.test(argString)
-      ? argString + `,`
-      : argString;
+  static _getStringPlusComma = (
+    argArrayOfStringsOutput,
+    argArrayStackToProcess,
+    argString
+  ) => {
+    if (
+      argArrayOfStringsOutput.length === 0 &&
+      argArrayStackToProcess.length === 1
+    ) {
+      return argString;
+    } else {
+      return argArrayStackToProcess.length > 0 &&
+        !helperFormatting.regexIsClosure.test(argString)
+        ? argString + `,`
+        : argString;
+    }
+  };
 
   static STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
   static ARGUMENT_NAMES = /([^\s,]+)/g;

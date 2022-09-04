@@ -34,6 +34,10 @@ export default class helperEnumDataTypes {
       return helperEnumDataTypes.fieldArray;
     }
 
+    if (arg === null) {
+      return helperEnumDataTypes.fieldEitherNonIterableOrString;
+    }
+
     // Check if object is anything ( results like null / undefined will return false )
     if (arg) {
       // If constructor is an Object then return the object as the type
@@ -46,9 +50,7 @@ export default class helperEnumDataTypes {
           return helperEnumDataTypes.fieldPromise;
         }
 
-        if (arg.constructor === Object) {
-          return helperEnumDataTypes.fieldObject;
-        }
+        return helperEnumDataTypes.fieldObject;
       }
     }
     // If we get this far, then all other possibilities have been ruled out

@@ -1,7 +1,5 @@
 "use strict";
 
-import { Worker } from "node:worker_threads";
-
 import HelperCircularReferences from "./helpersSupport/helperCircularReferences.js";
 import helperEnumDataTypes from "./helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "./helpersSupport/helperFormatting.js";
@@ -190,6 +188,7 @@ export default class prettyPrinterForHumans {
           }
           arrayOfStringsOutput.push(
             helperFormatting.getStringWhitespacePlusKeyPlusValuePlusComma(
+              arrayOfStringsOutput,
               arrayStackToProcess,
               argHelperOptions,
               itemObjectFromStack
@@ -209,6 +208,7 @@ export default class prettyPrinterForHumans {
           }
           arrayOfStringsOutput.push(
             helperFormatting.getStringWhitespacePlusKeyPlusValuePlusComma(
+              arrayOfStringsOutput,
               arrayStackToProcess,
               argHelperOptions,
               itemObjectFromStack
@@ -221,6 +221,7 @@ export default class prettyPrinterForHumans {
         case helperEnumDataTypes.fieldFunction:
           arrayOfStringsOutput.push(
             helperFormatting.getStringWhitespacePlusKeyPlusValuePlusComma(
+              arrayOfStringsOutput,
               arrayStackToProcess,
               argHelperOptions,
               itemObjectFromStack
@@ -240,6 +241,7 @@ export default class prettyPrinterForHumans {
           }
           arrayOfStringsOutput.push(
             helperFormatting.getStringWhitespacePlusKeyPlusValuePlusComma(
+              arrayOfStringsOutput,
               arrayStackToProcess,
               argHelperOptions,
               itemObjectFromStack
@@ -254,6 +256,7 @@ export default class prettyPrinterForHumans {
           if (itemObjectFromStack.fieldKey.length === 0) {
             arrayOfStringsOutput.push(
               helperFormatting.getStringPrefixWhitespacePlusValuePlusComma(
+                arrayOfStringsOutput,
                 arrayStackToProcess,
                 argHelperOptions,
                 itemObjectFromStack
@@ -265,6 +268,7 @@ export default class prettyPrinterForHumans {
           } else {
             arrayOfStringsOutput.push(
               helperFormatting.getStringWhitespacePlusKeyPlusValuePlusComma(
+                arrayOfStringsOutput,
                 arrayStackToProcess,
                 argHelperOptions,
                 itemObjectFromStack
@@ -281,12 +285,16 @@ export default class prettyPrinterForHumans {
     // - reduce() will throw an error if ran against an empty array, so do a size check ahead of time
     // - reduce() is a bit more performant than join()
     //
-    let stringToReturn =
-      arrayOfStringsOutput.length > 0
-        ? arrayOfStringsOutput.reduce(
-            (itemStringPrev, itemString) => itemStringPrev + `\n` + itemString
-          )
-        : ``;
+    //let stringToReturn = arrayOfStringsOutput.length > 0 ? arrayOfStringsOutput.reduce( (itemStringPrev, itemString) => itemStringPrev + `\n` + itemString ) : ``;
+
+    let stringToReturn;
+    if (arrayOfStringsOutput.length > 0) {
+      stringToReturn = arrayOfStringsOutput.reduce(
+        (itemStringPrev, itemString) => itemStringPrev + `\n` + itemString
+      );
+    } else {
+      stringToReturn = ``;
+    }
 
     if (argHelperOptions.argStringNameToOutput !== undefined) {
       stringToReturn = `${argHelperOptions.argStringNameToOutput} =\n${stringToReturn}`;
@@ -318,43 +326,6 @@ export default class prettyPrinterForHumans {
     }
   ) =>
     new Promise((resolve) => resolve(this.pformatSync(arg, argHelperOptions)));
-
-  static stringPathWorker = `./src/helpersSupport/worker.js`;
-  /**
-   * This function is the same as pformatSync, except it executes asynchronously on another thread
-   * and returns a promise
-   *
-   * @param {any} arg
-   * @param {HelperOptions} argHelperOptions
-   * @returns Promise
-   * */
-  static pformatAsyncMultiThreaded = async (arg, argHelperOptions = {}) =>
-    new Promise((resolve, reject) => {
-      //
-      // Create worker with module type
-      //
-      const worker = new Worker(prettyPrinterForHumans.stringPathWorker, {
-        type: `module`,
-      });
-      //
-      // Return on success
-      //
-      worker.once(`message`, (argResponseFromWorker) =>
-        resolve(argResponseFromWorker)
-      );
-      //
-      // Return on error
-      //
-      worker.onerror = (err) =>
-        reject(`${prettyPrinterForHumans.stringPathWorker}: err = ${err}`);
-      //
-      // Run worker
-      //
-      worker.postMessage({
-        arg: arg,
-        argHelperOptions: argHelperOptions,
-      });
-    });
 
   /**
    * This function prints the value returned by pformatSync.

@@ -4,7 +4,7 @@ Note: This all runs on a secondary thread
 */
 import { parentPort } from "node:worker_threads";
 
-import prettyPrinterForHumans from "../prettyPrinterForHumans.js";
+import prettyPrinterForHumans from "../../src/prettyPrinterForHumans.js";
 //
 // NOTE: This runs on the 2nd thread
 //
