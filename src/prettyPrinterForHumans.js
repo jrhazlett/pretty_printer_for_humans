@@ -325,7 +325,7 @@ export default class prettyPrinterForHumans {
       argStringIndentation: "    ",
     }
   ) =>
-    new Promise((resolve) => resolve(this.pformatSync(arg, argHelperOptions)));
+    new Promise((resolve) => resolve(prettyPrinterForHumans.pformatSync(arg, argHelperOptions)));
 
   /**
    * This function prints the value returned by pformatSync.
@@ -335,6 +335,6 @@ export default class prettyPrinterForHumans {
    * @param {HelperOptions} argHelperOptions
    * */
   static pprint = (arg, argHelperOptions = {}) => {
-    console.log(this.pformatSync(arg, argHelperOptions));
+    console.log(prettyPrinterForHumans.pformatSync(arg, argHelperOptions));
   };
 }

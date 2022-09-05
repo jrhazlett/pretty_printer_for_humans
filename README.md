@@ -11,6 +11,9 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 ---
 Updates and fixes:
 
+Ver. 1.0.6
+Fixed static references in prettyPrint functions.
+
 Ver. 1.0.5
 -Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
 blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
