@@ -9,16 +9,26 @@ import helperEnumDataTypes from "./helperEnumDataTypes.js";
 import HelperObjectForStack from "./helperObjectForStack.js";
 
 export default class helperFormatting {
+  static optionsForLocaleCompare = { sensitivity: "base" };
+
   /**
    * @param {[]} argArray
    * @returns []
    * */
-  static getArrayOfStringsSortedCaseInsensitive = (argArray) =>
-    argArray.sort((itemStringPrev, itemString) =>
-      `${itemStringPrev}`
-        .toLowerCase()
-        .localeCompare(`${itemString}`.toLowerCase())
+  static getArrayOfStringsSortedCaseInsensitive = (argArray) => {
+    //
+    // Reminder: Apparently this approach carries a performance boost over doing a lower case comparison.
+    // Source:
+    // https://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-array-of-string-in-javascript
+    //
+    return argArray.sort((itemStringPrev, itemString) =>
+      `${itemStringPrev}`.localeCompare(
+        `${itemString}`,
+        undefined,
+        helperFormatting.optionsForLocaleCompare
+      )
     );
+  };
   /**
    * @param {[]} argArrayStackToUpdate
    * @param {HelperOptions} argHelperOptions

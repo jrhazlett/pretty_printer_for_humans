@@ -3,7 +3,6 @@
 This module processes objects and routes their children to one of the
 'helperProcessChild' modules.
 */
-import HelperCircularReferences from "../helpersSupport/helperCircularReferences.js";
 import helperEnumDataTypes from "../helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "../helpersSupport/helperFormatting.js";
 import HelperObjectForStack from "../helpersSupport/helperObjectForStack.js";
@@ -85,13 +84,6 @@ export default class helperProcessObject {
     let arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive(
       Object.keys(argObjectFromStack.fieldValue)
     );
-    if (argHelperOptions.argBoolHandleCircularReferences) {
-      arrayOfKeys = arrayOfKeys.filter(
-        (itemKey) =>
-          itemKey !==
-          HelperCircularReferences.fieldStringNamePropertyForTracking
-      );
-    }
     //
     // Go through each key and process the associated value
     //
@@ -144,18 +136,13 @@ export default class helperProcessObject {
         itemIntIndex++
       ) {
         const itemKey = arrayOfKeys[itemIntIndex];
-        if (
-          itemKey !==
-          HelperCircularReferences.fieldStringNamePropertyForTracking
-        ) {
-          helperProcessObject._routeKeysToComplexOrSimple(
-            arrayOfKeys,
-            arrayOfPairsKeysAndTypesComplex,
-            arrayOfPairsKeysAndTypesSimple,
-            itemKey,
-            argObjectFromStack
-          );
-        }
+        helperProcessObject._routeKeysToComplexOrSimple(
+          arrayOfKeys,
+          arrayOfPairsKeysAndTypesComplex,
+          arrayOfPairsKeysAndTypesSimple,
+          itemKey,
+          argObjectFromStack
+        );
       }
     } else {
       for (
@@ -271,16 +258,6 @@ export default class helperProcessObject {
     argObjectFromStack
   ) => {
     let arrayOfKeys = Object.keys(argObjectFromStack.fieldValue);
-    //
-    // If we're tracking for circular references, then skip it as a possible child to process
-    //
-    if (argHelperOptions.argBoolHandleCircularReferences) {
-      arrayOfKeys = arrayOfKeys.filter(
-        (itemKey) =>
-          itemKey !==
-          HelperCircularReferences.fieldStringNamePropertyForTracking
-      );
-    }
     //
     // Go through each key and process the associated value
     //

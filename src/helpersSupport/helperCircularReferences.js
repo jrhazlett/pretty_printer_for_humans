@@ -28,9 +28,16 @@ export default class HelperCircularReferences {
     // Check if argArrayOrObject is an Object (arrays will trigger this too)
     //
     if (argArrayOrObject instanceof Object) {
-      if (!this.fieldSetOfObjectIds.has(argArrayOrObject)) {
-        this.fieldSetOfObjectIds.add(argArrayOrObject);
+      //
+      // If arg is already in the set, then return true
+      //
+      if (this.fieldSetOfObjectIds.has(argArrayOrObject)) {
         return true;
+      } else {
+        //
+        // If the object hasn't already been traversed, then add it to the set
+        //
+        this.fieldSetOfObjectIds.add(argArrayOrObject);
       }
     }
     //

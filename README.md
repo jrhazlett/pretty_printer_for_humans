@@ -9,7 +9,15 @@ License: MIT
 Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ---
+
 Updates and fixes:
+
+Ver. 1.0.7
+Fixed bug where circular reference tracker pre-maturely registered false positives
+Added performance improvement to case-insensitive string comparisons
+Added functions (see lower sections for details):
+getArrayOfPathsInArg()
+isKeyInArg()
 
 Ver. 1.0.6
 Fixed static references in prettyPrint functions.
@@ -19,6 +27,7 @@ Ver. 1.0.5
 blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
 `pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
 -Fixed pathing issue where worker path didn't work for library installs.
+
 ---
 
 "Stare at the data long enough, and sometimes the data stares back."
@@ -345,12 +354,12 @@ wrapper to prevent code blocking.
 
 `pformatAsyncMultiThreaded( arg, { /*options*/ } )`
 
-WARNING: This function is not importable through the root prettyPrinterForHumans library, and instead uses its own 
+WARNING: This function is not importable through the root prettyPrinterForHumans library, and instead uses its own
 import. This is so users can run the library in non-Nodejs environments.
 
 This takes the same 'arg' and options as the sync function. This shifts `pformatSync()`'s workload to a 2nd thread.
 
-WARNING: Any limitations specific to workers still apply. ( ie attempting to clone functions, and environmental 
+WARNING: Any limitations specific to workers still apply. ( ie attempting to clone functions, and environmental
 limitations )
 
 The library doesn't attempt to serialize the data ahead of time because this would mean either cloning the data
@@ -397,6 +406,11 @@ immediately.
 
 ### Other functions...
 
+`getArrayOfStringsPathsInArg( arg )`
+
+Returns a sorted array of possible paths within arg.
+If arg is not an array / object, the returned array will be empty.
+
 `getObjectWithoutTrackingAttributes( argToUpdate )`
 
 This function removes the attributes needed for preventing circular references if they exist.
@@ -404,6 +418,14 @@ This function removes the attributes needed for preventing circular references i
 NOTE: This isn't necessary if argBoolHandleCircularReferences is set to false.
 
 NOTE: This doesn't run unless manually called, to avoid potential data loss.
+
+`isKeyInArg( arg, argKey, argBoolCaseSensitive )`
+
+This function goes through arg's data structure and searches for keys.
+If arg is not an array / object, then this will default to false.
+
+If argBoolCaseSensitive is true, then this search uses hasOwnProperty().
+If false, then this search does a case-insensitive locale comparison.
 
 `isRecursive( arg )`
 

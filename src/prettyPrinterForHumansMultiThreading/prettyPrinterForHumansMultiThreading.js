@@ -17,7 +17,9 @@ export default class prettyPrinterForHumansMultiThreading {
    * */
   static fieldHelperOptions = HelperOptions;
 
-  static fieldStringPathWorker = `${dirname(fileURLToPath(import.meta.url))}/worker.js`
+  static fieldStringPathWorker = `${dirname(
+    fileURLToPath(import.meta.url)
+  )}/worker.js`;
   /**
    * This function is the same as pformatSync, except it executes asynchronously on another thread
    * and returns a promise
@@ -58,6 +60,4 @@ export default class prettyPrinterForHumansMultiThreading {
         argHelperOptions: argHelperOptions,
       });
     });
-
-
 }
