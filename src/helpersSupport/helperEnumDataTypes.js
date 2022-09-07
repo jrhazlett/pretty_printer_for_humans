@@ -21,6 +21,8 @@ export default class helperEnumDataTypes {
   // This data type is generally what gets printed to the output
   static fieldEitherNonIterableOrString = 7;
 
+  static fieldSymbol = 8;
+
   /**
    * @param {any} arg
    * @returns number
@@ -34,8 +36,14 @@ export default class helperEnumDataTypes {
       return helperEnumDataTypes.fieldArray;
     }
 
-    if (arg === null) {
+    if (arg === null || arg === undefined) {
       return helperEnumDataTypes.fieldEitherNonIterableOrString;
+    }
+    //
+    // Reminder: This is important because symbols do *not* support `${}` string conversions
+    //
+    if (typeof arg === "symbol") {
+      return helperEnumDataTypes.fieldSymbol;
     }
 
     // Check if object is anything ( results like null / undefined will return false )

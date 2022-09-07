@@ -12,6 +12,10 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ### Updates and fixes
 
+#### Ver. 1.1.0
+
+Added support for symbols.
+
 #### Ver. 1.0.9
 
 Name scheme changes:<br>

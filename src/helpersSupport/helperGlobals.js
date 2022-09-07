@@ -3,6 +3,8 @@ This module stores functions which benefit from being global, but don't necessar
 
 Everything here is static, so it should only exist in memory once.
 */
+import helperEnumDataTypes from "./helperEnumDataTypes.js";
+
 export default class helperGlobals {
   static STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
   static ARGUMENT_NAMES = /([^\s,]+)/g;
@@ -27,6 +29,26 @@ export default class helperGlobals {
       : arrayToReturn.filter((itemStringNameArg) =>
           itemStringNameArg.startsWith("arg")
         );
+  };
+
+  /**
+   * Javascript's `${}` doesn't work in *all* cases, so this function is necessary to compensate.
+   *
+   * @param {any} arg
+   * @param {number} argEnumDataType
+   * @returns string
+   * */
+  static getStringFromArg = (arg, argEnumDataType) => {
+    switch (argEnumDataType) {
+      //
+      // Reminder: symbols do *not* support `${}`
+      //
+      case helperEnumDataTypes.fieldSymbol:
+        return arg.toString();
+
+      default:
+        return `${arg}`;
+    }
   };
 
   static optionsForLocaleCompare = { sensitivity: "base" };

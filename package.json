@@ -1,6 +1,6 @@
 {
   "name": "pretty_printer_for_humans",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "author": "James Hazlett",
   "description": "Library for generating human-friendly strings from a given data structure",
   "license": "MIT",

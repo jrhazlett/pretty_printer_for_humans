@@ -13,6 +13,7 @@ in the long-term.
 import HelperCircularReferences from "../helpersSupport/helperCircularReferences.js";
 import helperEnumDataTypes from "../helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "../helpersSupport/helperFormatting.js";
+import helperGlobals from "../helpersSupport/helperGlobals.js";
 import HelperObjectForStack from "../helpersSupport/helperObjectForStack.js";
 import HelperOptions from "../helpersSupport/helperOptions.js";
 
@@ -197,8 +198,14 @@ export default class helperProcessChild {
           new HelperObjectForStack(
             argObjectChildForStack.fieldIntDataType,
             argObjectFromStack.fieldIntLayersIn,
-            `${argObjectChildForStack.fieldKey}`,
-            `${argObjectChildForStack.fieldValue}`
+            helperGlobals.getStringFromArg(
+              argObjectChildForStack.fieldKey,
+              argObjectChildForStack.fieldIntDataType
+            ),
+            helperGlobals.getStringFromArg(
+              argObjectChildForStack.fieldValue,
+              argObjectChildForStack.fieldIntDataType
+            )
           )
         );
         break;

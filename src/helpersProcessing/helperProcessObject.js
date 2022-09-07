@@ -87,12 +87,14 @@ export default class helperProcessObject {
     //
     // Go through each key and process the associated value
     //
+    console.log(`arrayOfKeys = ${JSON.stringify(arrayOfKeys)}`);
     for (
       let itemIntIndex = arrayOfKeys.length - 1, intLength = 0;
       itemIntIndex >= intLength;
       itemIntIndex--
     ) {
       const itemKey = arrayOfKeys[itemIntIndex];
+      console.log(`itemKey = ${itemKey}`);
       const itemValue = argObjectFromStack.fieldValue[itemKey];
       helperProcessChild.processChild(
         argArrayStackToUpdate,
