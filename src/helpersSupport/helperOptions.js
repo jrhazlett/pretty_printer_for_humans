@@ -3,7 +3,7 @@
 This module receives optional values and generates defaults for anything left undefined.
 
 Garbage collection:
-Its instance scope is limited to pformatSync() and all references should break upon the
+Its instance scope is limited to pformat() and all references should break upon the
 function's conclusion.
 */
 class _enumSortOptions {
@@ -73,7 +73,7 @@ export default class HelperOptions {
    *
    * @param {string} argStringTrailingSpace
    * When defined, inserts argStringTrailingSpace as a string one line below the data contents
-   * If undefined, then there is no empty space below the raw output from pformatSync()
+   * If undefined, then there is no empty space below the raw output from pformat()
    * Default setting: undefined
    *
    * */

@@ -10,19 +10,49 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ---
 
-Updates and fixes:
+### Updates and fixes
 
-Ver. 1.0.7
-Fixed bug where circular reference tracker pre-maturely registered false positives
-Added performance improvement to case-insensitive string comparisons
-Added functions (see lower sections for details):
+#### Ver. 1.0.9
+
+Name scheme changes:<br>
+'Sync' was removed from all function names. From now on, if the function name doesn't have the 'Async' suffix, then
+assume its execution is synchronous.
+
+All functions in `prettyPrinterForHumansMultiThreading` now end with the `Async` suffix. There's no longer any mention
+of `MultiThreading` in the names.
+
+New functions added to `prettyPrinterForHumansMultiThreading`:<br>
+getArrayOfStringsPathsInArgAsync()<br>
+isKeyInArgAsync()
+
+Added smarter code to the worker. This only really affects people intending to clone the code and change it. Details
+documented later in the readme, as well as in the code.
+
+`prettyPrinterForHumansMultiThreading` now has its own section in the readme.
+
+Theoretical performance improvement: Swapped out `.toLowerCase()` for case-insensitive string compares with
+`.localCompare()` with a static option object. I also implemented the same swap for `.sort()` functions.
+
+#### Ver. 1.0.8
+
+Added multi-threading equivalents for (see lower sections for details)
 getArrayOfPathsInArg()
 isKeyInArg()
 
-Ver. 1.0.6
+#### Ver. 1.0.7
+
+Fixed bug where circular reference tracker pre-maturely registered false positives
+Added performance improvement to case-insensitive string comparisons
+Added functions (see lower sections for details):
+getArrayOfPathsInArg()<br>
+isKeyInArg()
+
+#### Ver. 1.0.6
+
 Fixed static references in prettyPrint functions.
 
-Ver. 1.0.5
+#### Ver. 1.0.5
+
 -Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
 blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
 `pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
@@ -58,17 +88,20 @@ npm i pretty_printer_for_humans
 
 - 'The stack' - When I refer to this, I mean the custom stack used to process the entire data packages in
   prettyPrinterForHumans.
-- 'The main function' - This refers to pformatSync() if its not clear within the context of its use.
+- 'The main function' - This refers to pformat() if its not clear within the context of its use.
 - 'Function' - Technically every 'function' in this library is a method, but I think more people will understand
   'function' than method.
 
-## To import
+## Public functions
 
+## Functions in prettyPrinterForHumans
+
+To import:<br>
 import prettyPrinterForHumans from "pretty_printer_for_humans";
 
-## Public Methods
+NOTE: ALL 'async' functions part of this import are **single-threaded**.
 
-### 'The main function': `pformatSync( arg, { /*options*/ } )`
+### 'The main function': `pformat( arg, { /*options*/ } )`
 
 This is the 'workhorse' function for the library. This function takes 'arg', which can be of any data type, and outputs
 a string formatted in a human-friendly way.
@@ -95,7 +128,7 @@ time.
 Yes, it intentionally breaks the `__` style rule, and is wordy on purpose. The point is for this to avoid colliding
 with any pre-existing properties in the data.
 
-NOTE: This attribute will NOT appear in the string returned by pformatSync() in ALL cases.
+NOTE: This attribute will NOT appear in the string returned by pformat() in ALL cases.
 
 ### argBoolPrintWarningOnCircularReference
 
@@ -117,7 +150,7 @@ const inputData = {
     objectCircularReference: objectCircularReference,
 }
 
-const result = await prettyPrinterForHumans.pformatAsyncSingleThread(
+const result = await prettyPrinterForHumans.pformatAsync(
     inputData,
     {
         argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
@@ -155,7 +188,7 @@ NOTE: This string will never indent.
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans";
 
-const result = await prettyPrinterForHumans.pformatAsyncSingleThread(
+const result = await prettyPrinterForHumans.pformatAsync(
     [ 1, 2, Error( "3" ), ],
     {
         argEnumSortOption: prettyPrinterForHumans.fieldHelperOptions.fieldEnumSortOptions.fieldOptionPrintAlphabetical,
@@ -198,7 +231,7 @@ alphabetical order, and is **not** case-sensitive.
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans";
 
-const result = prettyPrinterForHumans.pformatSync(
+const result = prettyPrinterForHumans.pformat(
   {
     "object" : { "object.0" : 0, "object.1" : 1, "object.2" : 2, },
     "zero" : 0,
@@ -242,7 +275,7 @@ The values with children print at the bottom of a given layer.
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans";
 
-const result = prettyPrinterForHumans.pformatSync(
+const result = prettyPrinterForHumans.pformat(
 {
     "object" : { "object.0" : 0, "object.1" : 1, "object.2" : 2, },
     "zero" : 0,
@@ -292,7 +325,7 @@ it will print a summary value instead. i.e. `[ ... ]` for arrays, and `{ ... }` 
 
 The default value for this option is 'undefined', and this means the printer will attempt to print all layers.
 
-If this option is set to 1, the printer will only query the immediate argument passed to pformatSync(). If the value
+If this option is set to 1, the printer will only query the immediate argument passed to pformat(). If the value
 is set to 2, then the function will query both the immediate argument, and any children.
 
 If the number exceeds the depth of the argument, then this will result in the entire data structure getting processed.
@@ -302,7 +335,7 @@ NOTE: Any value <= 1 will provide the same output.
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans";
 
-const result = prettyPrinterForHumans.pformatSync(
+const result = prettyPrinterForHumans.pformat(
   [ "zero", "one", "two", "three", [ "four", "five", "six", ], ],
   {
     argStringNameToOutput: "result",
@@ -343,24 +376,103 @@ whatever is printed next, but the value for this can be any string.
 
 ## Additional functions
 
-NOTE: All these functions take the same arguments as pformatSync()
+NOTE: All these functions take the same arguments as `pformat()`
 
-### Functions that expand on pformatSync()
+### Functions that expand on pformat()
 
-`pformatAsyncSingleThread( arg, { /*options*/ } )`
+`pformatAsync( arg, { /*options*/ } )`
 
-This takes the same 'arg' and options as the original function. What this does is it runs pformatSync() in a Promise
+This takes the same 'arg' and options as the original function. What this does is it runs `pformat()` in a Promise
 wrapper to prevent code blocking.
 
-`pformatAsyncMultiThreaded( arg, { /*options*/ } )`
+`pprint( arg, { /*options*/ } )`
 
-WARNING: This function is not importable through the root prettyPrinterForHumans library, and instead uses its own
-import. This is so users can run the library in non-Nodejs environments.
+This takes the same 'arg' and options as the original function. This runs `pformat()` and passes the result to
+console.log().
 
-This takes the same 'arg' and options as the sync function. This shifts `pformatSync()`'s workload to a 2nd thread.
+NOTE: There is no async equivalent to this function. The assumption is if you call it, its because you want it to print
+immediately.
+
+### Other functions...
+
+`getArrayOfStringsPathsInArg( arg )`
+
+Returns a sorted array of possible paths within arg.
+If arg is not an array / object, the returned array will be empty.
+
+`isKeyInArg( arg, argKey, argBoolCaseSensitive )`
+
+This function goes through arg's data structure and searches for keys.
+If arg is not an array / object, then this will default to false.
+
+If argBoolCaseSensitive is true, then this search uses hasOwnProperty().
+If false, then this search does a case-insensitive locale comparison.
+
+NOTE: This only supports key lookups and **not** array indexes. It seemed kinda pointless to put "0" as an argument,
+and have the function return 'true' immediately upon coming across a non-empty array.
+
+`isRecursive( arg )`
+
+This returns true if the argument is at least three levels deep.
+
+## High-level explanation of the script
+
+The entire library revolves around the function `pformat()`.
+
+The algorithm makes heavy use of a stack of object instances, rather than having functions call themselves. This
+is to keep from colliding any recursion limits, and is generally more processing efficient than function approach.
+
+Each object popped off the stack contains a value. The printer checks various attributes for a couple of
+characteristics:
+
+- Is the value an array?
+- Is the value an object?
+- Is the value an error object?
+- Is the value a promise?
+- Is the value a basic type? (ie string or number)
+
+If the value is either an array or a basic object, then the printer will check it for children and move those to the
+stack for processing.
+
+The printer auto-sorts all object keys by default.
+
+## prettyPrinterForHumansMultiThreading
+
+To import:<br>
+
+`import prettyPrinterForHumansMultiThreading from "pretty_printer_for_humans/src/prettyPrinterForHumansMultiThreading/prettyPrinterForHumansMultiThreading.js"`
 
 WARNING: Any limitations specific to workers still apply. ( ie attempting to clone functions, and environmental
 limitations )
+
+NOTE: There are **no** synchronous functions that are part of this import. ALL 'async' functions are
+**multi-threaded**.
+
+### Functions
+
+`getArrayOfStringsPathsInArgAsync()`
+
+Returns a sorted array of possible paths within arg.
+If arg is not an array / object, the returned array will be empty.
+
+Accomplishes this by executing the work on another thread.
+
+`isKeyInArgAsync( arg, argKey, argBoolCaseSensitive = true )`
+
+This function goes through arg's data structure and searches for keys.
+If arg is not an array / object, then this will default to false.
+
+If argBoolCaseSensitive is true, then this search uses hasOwnProperty().
+If false, then this search does a case-insensitive locale comparison.
+
+NOTE: This only supports key lookups and **not** array indexes. It seemed kinda pointless to put "0" as an argument,
+and have the function return 'true' immediately upon coming across a non-empty array.
+
+Accomplishes this by executing the work on another thread.
+
+`pformatAsync( arg, { /*options*/ } )`
+
+This takes the same 'arg' and options as `pformat()`, and it merely moves the workload to a 2nd thread.
 
 The library doesn't attempt to serialize the data ahead of time because this would mean either cloning the data
 structure, which would defeat the point of using another thread, or it would require editing the argument itself,
@@ -371,9 +483,9 @@ but in my tests, this doesn't appear to be an issue. This pretty much says to me
 
 ```
 import prettyPrinterForHumansMultiThreading from
-        "./src/prettyPrinterForHumansMultiThreading/prettyPrinterForHumansMultiThreading.js";
+    "pretty_printer_for_humans/src/prettyPrinterForHumansMultiThreading/prettyPrinterForHumansMultiThreading.js"
 
-const result = await prettyPrinterForHumansMultiThreading.pformatAsyncMultiThreaded(
+const result = await prettyPrinterForHumansMultiThreading.pformatAsync(
     {
         "2" : 2,
         "3" : 3,
@@ -396,74 +508,14 @@ result =
 }
 ```
 
-`pprint( arg, { /*options*/ } )`
-
-This takes the same 'arg' and options as the original function. This runs pformatSync() and passes the result to
-console.log().
-
-NOTE: There is no async equivalent to this function. The assumption is if you call it, its because you want it to print
-immediately.
-
-### Other functions...
-
-`getArrayOfStringsPathsInArg( arg )`
-
-Returns a sorted array of possible paths within arg.
-If arg is not an array / object, the returned array will be empty.
-
-`getObjectWithoutTrackingAttributes( argToUpdate )`
-
-This function removes the attributes needed for preventing circular references if they exist.
-
-NOTE: This isn't necessary if argBoolHandleCircularReferences is set to false.
-
-NOTE: This doesn't run unless manually called, to avoid potential data loss.
-
-`isKeyInArg( arg, argKey, argBoolCaseSensitive )`
-
-This function goes through arg's data structure and searches for keys.
-If arg is not an array / object, then this will default to false.
-
-If argBoolCaseSensitive is true, then this search uses hasOwnProperty().
-If false, then this search does a case-insensitive locale comparison.
-
-`isRecursive( arg )`
-
-This returns true if the argument is at least three levels deep.
-
-## High-level explanation of the script
-
-The entire library revolves around the function pformatSync().
-
-The algorithm makes heavy use of a stack of object instances, rather than having functions call themselves. This
-is to keep from colliding any recursion limits, and is generally more processing efficient than function approach.
-
-Each object popped off the stack contains a value. The printer checks various attributes for a couple of
-characteristics:
-
-- Is the value an array?
-- Is the value an object?
-- Is the value an error object?
-- Is the value a promise?
-- Is the value a basic type? (ie string or number)
-
-If the value is either an array or a basic object, then the printer will check it for children and move those to the
-stack for processing.
-
-The printer auto-sorts all object keys by design.
-
 ## Handling circular references
 
 This is handled via...
 src/helpersPrettyPrinter/helpersCircularReferences/helperCircularReferences.js
 
-After some cursory research, it doesn't look like there's a consistently good way to get a unique id for each object
-instance in javascript.
-
-To get around this, I went with the 'minimally invasive' approach by defining a new attribute in objects passed to the
-printer, which **should** have a pretty low chance of showing up in other people's projects. It also intentionally
-breaks the typical coding convention for underscores by design, to help with this (four leading and trailing
-underscores, rather than two).
+It turns out, while unique ids for objects aren't reachable within Javascript, it looks like Set() can still track
+them. That's pretty much how this module works: `isAlreadyTraversed()` checks if an object already exists. If true,
+it returns true. If false, it will add the object to the set and then return false.
 
 ## Optimizations
 
@@ -480,7 +532,7 @@ underscores, rather than two).
 
 This library **should** be completely free of memory leaks. There are **no** cases of outer scope variable references,
 without either being pass-by-argument or being an intentionally static single-instance global. The maximum possible
-scope of **all** dynamically created instances **is** pformatSync(). So, once pformatSync() concludes, **all**
+scope of **all** dynamically created instances **is** `pformat()`. So, once `pformat()` concludes, **all**
 references to these dynamic instances **should** drop to zero.
 
 Each "ObjectForStack" instance moves exclusively through argument passing, and **should** have their references drop
@@ -490,7 +542,7 @@ to zero upon leaving the stack and then dropping from scope.
 
 Even when reaching the 'leaf' values in a given tree, the routing functions still push to the stack, rather than
 directly to output. This is intentional, because it allows all output and formatting code to be consolidated within
-the actual pformatSync() function, rather than being distributed across multiple modules.
+the actual `pformat()` function, rather than being distributed across multiple modules.
 
 ## Notes for modifying code
 
@@ -505,7 +557,7 @@ This is both the primary interface for the library and where it manages:
 
 #### src/helpersPrettyPrinter/helperOptions.js
 
-This is a container for options to use with pformatSync() and all similar functions.
+This is a container for options to use with `pformat()` and all similar functions.
 
 #### src/helpersPrettyPrinter/helpersProcessing
 
@@ -520,6 +572,21 @@ and 'closure' brackets for objects and arrays respectively.
 #### src/helpersPrettyPrinter/helpersSupport/helperEnumDataTypes.js
 
 This is used for identifying and encoding data types into ints. The 'enum' data type isn't actually used.
+
+#### src/prettyPrinterForHumansMultiThreading
+
+This contains two files:<br>
+prettyPrinterForHumansMultiThreading.js<br>
+worker.js
+
+prettyPrinterForHumansMultiThreading is pretty much just async + worker wrappers for many of the same functions as
+prettyPrinterForHumans.
+
+worker.js does a bit more heavy lifting. No only does it execute the desired function on a 2nd thread, but it also
+auto-searches the incoming message for relevant arguments to dynamically feed to the target function.
+
+While there's a fair amount of processing here to line up the relevant arguments, all this happens on the 2nd thread,
+and supports a single agnostic worker, rather than managing a bunch of redundant definitions.
 
 ### Naming schemes
 
@@ -562,7 +629,7 @@ here: consistent code across all modules. IDEs tend to be friendly enough with t
 return on value is diminished a bit. That and I have yet to find an effective solution for creating web workers that
 can both run TypeScript and import other TypeScript modules.
 
-Also, the whole library is meant to be accessible and modded (hence the MIT license).
+Also, the whole library is meant to be accessible and modded ( hence the MIT license ).
 
 ### This code violates X style, is this intentional?
 

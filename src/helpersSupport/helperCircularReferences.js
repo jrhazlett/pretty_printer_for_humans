@@ -2,9 +2,9 @@
 /*
 This class prevents infinite loops from circular references if the option is enabled in the pretty printer.
 
-Its only instantiated if the option is enabled, and its scope is limited to only pformatSync()
+Its only instantiated if the option is enabled, and its scope is limited to only pformat()
 
-The scope of this class' instance is limited exclusively to each pformatSync() run. This prevents cross-
+The scope of this class' instance is limited exclusively to each pformat() run. This prevents cross-
 contamination and potential 'races to the finish.'
 */
 import helperEnumDataTypes from "./helperEnumDataTypes.js";
@@ -86,7 +86,6 @@ export default class HelperCircularReferences {
   // Setup
   //
   constructor() {
-    this.fieldIntIdCounter = 0;
     this.fieldSetOfObjectIds = new Set();
   }
 }

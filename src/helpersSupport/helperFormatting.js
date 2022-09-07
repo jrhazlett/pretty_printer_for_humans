@@ -6,6 +6,7 @@ Sources:
 https://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically
 */
 import helperEnumDataTypes from "./helperEnumDataTypes.js";
+import helperGlobals from "./helperGlobals.js";
 import HelperObjectForStack from "./helperObjectForStack.js";
 
 export default class helperFormatting {
@@ -68,7 +69,7 @@ export default class helperFormatting {
    * */
   static getStringFunctionSignature = (argFunction) => {
     const arrayOfArguments =
-      helperFormatting._getArrayOfNamesForParameters(argFunction);
+      helperGlobals.getArrayOfNamesForParameters(argFunction);
     return (
       (arrayOfArguments.length === 0
         ? "()"
@@ -183,26 +184,5 @@ export default class helperFormatting {
         ? argString + `,`
         : argString;
     }
-  };
-
-  static STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
-  static ARGUMENT_NAMES = /([^\s,]+)/g;
-  /**
-   * @param {Function} argFunction
-   * @returns []
-   * */
-  static _getArrayOfNamesForParameters = (argFunction) => {
-    const stringFromCallback = argFunction
-      .toString()
-      .replace(helperFormatting.STRIP_COMMENTS, ``);
-
-    const arrayToReturn = stringFromCallback
-      .slice(
-        stringFromCallback.indexOf("(") + 1,
-        stringFromCallback.indexOf(")")
-      )
-      .match(helperFormatting.ARGUMENT_NAMES);
-
-    return arrayToReturn === null ? [] : arrayToReturn;
   };
 }

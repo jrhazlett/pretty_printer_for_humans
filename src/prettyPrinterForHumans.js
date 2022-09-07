@@ -3,18 +3,11 @@
 import HelperCircularReferences from "./helpersSupport/helperCircularReferences.js";
 import helperEnumDataTypes from "./helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "./helpersSupport/helperFormatting.js";
-import helperLogic from "./helpersSupport/helperLogic.js";
+import helperGlobals from "./helpersSupport/helperGlobals.js";
 import HelperObjectForStack from "./helpersSupport/helperObjectForStack.js";
 import helperProcessArray from "./helpersProcessing/helperProcessArray.js";
 import helperProcessObject from "./helpersProcessing/helperProcessObject.js";
 import HelperOptions from "./helpersSupport/helperOptions.js";
-
-class _HelperOptionsIsKeyInArg {
-  constructor({ argBoolCaseSensitive }) {
-    this.argBoolCaseSensitive =
-      argBoolCaseSensitive === undefined ? true : argBoolCaseSensitive;
-  }
-}
 
 export default class prettyPrinterForHumans {
   /**
@@ -137,10 +130,17 @@ export default class prettyPrinterForHumans {
     }
   };
 
-  static _getStringPath = (argStringPathPrefix, argStringKeyNew) =>
-    argStringPathPrefix.length === 0
+  /**
+   * @param {string} argStringPathPrefix
+   * @param {string} argStringKeyNew
+   * @returns string
+   * */
+  static _getStringPath = (argStringPathPrefix, argStringKeyNew) => {
+    return argStringPathPrefix.length === 0
       ? argStringKeyNew
       : argStringPathPrefix + "." + argStringKeyNew;
+  };
+
   //
   // Is
   //
@@ -151,6 +151,7 @@ export default class prettyPrinterForHumans {
    * @param {any} arg
    * @param {any} argKey
    * @param {boolean} argBoolCaseSensitive
+   * @returns boolean
    * */
   static isKeyInArg = (arg, argKey, argBoolCaseSensitive = true) => {
     const helperCircularReferences = new HelperCircularReferences();
@@ -228,14 +229,17 @@ export default class prettyPrinterForHumans {
     } else {
       const stringKey = `${argKey}`;
       const arrayOfKeys = Object.keys(argObject);
+
       for (
         let itemIntIndex = 0, intLength = arrayOfKeys.length;
         itemIntIndex < intLength;
         itemIntIndex++
       ) {
+        const itemStringKeyFromArray = `${arrayOfKeys[itemIntIndex]}`;
+
         if (
-          helperLogic.logicAreStringsEqualCaseInsensitive(
-            `${arrayOfKeys[itemIntIndex]}`,
+          helperGlobals.logicAreStringsEqualCaseInsensitive(
+            itemStringKeyFromArray,
             stringKey
           )
         ) {
@@ -246,6 +250,22 @@ export default class prettyPrinterForHumans {
     }
   };
 
+  /**
+   * This function returns true if the key is detected anywhere in the data structure.
+   * If arg is not an array / object, then this will default to false.
+   *
+   * @param {any} arg
+   * @param {any} argKey
+   * @param {boolean} argBoolCaseSensitive
+   * @returns Promise
+   * */
+  static isKeyInArgAsync = async (arg, argKey, argBoolCaseSensitive = true) => {
+    return new Promise((resolve) => {
+      resolve(
+        prettyPrinterForHumans.isKeyInArg(arg, argKey, argBoolCaseSensitive)
+      );
+    });
+  };
   /**
    * This function returns true if the top layer children has at least one array or object
    *
@@ -320,7 +340,7 @@ export default class prettyPrinterForHumans {
    * @param {HelperOptions} argHelperOptions
    * @returns string
    * */
-  static pformatSync = (arg, argHelperOptions = {}) => {
+  static pformat = (arg, argHelperOptions = {}) => {
     argHelperOptions = new HelperOptions(argHelperOptions);
 
     let helperCircularReferences;
@@ -538,14 +558,14 @@ export default class prettyPrinterForHumans {
   };
 
   /**
-   * This function is the same as pformatSync, except it executes asynchronously by returning
+   * This function is the same as pformat, except it executes asynchronously by returning
    * a promise
    *
    * @param {any} arg
    * @param {HelperOptions} argHelperOptions
    * @returns Promise
    * */
-  static pformatAsyncSingleThread = async (
+  static pformatAsync = async (
     arg,
     argHelperOptions = {
       argBoolHandleCircularReferences: true,
@@ -554,19 +574,20 @@ export default class prettyPrinterForHumans {
       argBoolPrintWarningOnPromise: true,
       argStringIndentation: "    ",
     }
-  ) =>
-    new Promise((resolve) =>
-      resolve(prettyPrinterForHumans.pformatSync(arg, argHelperOptions))
+  ) => {
+    return new Promise((resolve) =>
+      resolve(prettyPrinterForHumans.pformat(arg, argHelperOptions))
     );
+  };
 
   /**
-   * This function prints the value returned by pformatSync.
+   * This function prints the value returned by pformat().
    * For deterministic purposes, there is no async variation of this function.
    *
    * @param {any} arg
    * @param {HelperOptions} argHelperOptions
    * */
   static pprint = (arg, argHelperOptions = {}) => {
-    console.log(prettyPrinterForHumans.pformatSync(arg, argHelperOptions));
+    console.log(prettyPrinterForHumans.pformat(arg, argHelperOptions));
   };
 }
