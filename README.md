@@ -12,9 +12,9 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ### Updates and fixes
 
-#### Ver. 1.1.2
+#### Ver. 1.1.3
 
-Removed extra debugging messages
+Bug fix: Removed extra console messages from previous debugging changes.
 
 #### Ver. 1.1.0
 
