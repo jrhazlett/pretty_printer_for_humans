@@ -12,6 +12,10 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ### Updates and fixes
 
+#### Ver. 1.1.2
+
+Removed extra debugging messages
+
 #### Ver. 1.1.0
 
 Added support for symbols.
@@ -482,8 +486,7 @@ The library doesn't attempt to serialize the data ahead of time because this wou
 structure, which would defeat the point of using another thread, or it would require editing the argument itself,
 which would cause data loss.
 
-The library also doesn't attempt error handling here, because some forums claim symbols can't be passed to workers,
-but in my tests, this doesn't appear to be an issue. This pretty much says to me 'moving target.'
+The library also doesn't attempt error handling here, since it looks like workers are still a 'work in progress.'
 
 ```
 import prettyPrinterForHumansMultiThreading from
