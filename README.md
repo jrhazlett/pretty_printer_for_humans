@@ -12,6 +12,11 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ### Updates and fixes
 
+#### Ver. 1.1.4
+
+Fixed crash where `[Object: null prototype]` wasn't properly id'd as an object.
+Tested against Express req objects.
+
 #### Ver. 1.1.3
 
 Bug fix: Removed extra console messages from previous debugging changes.

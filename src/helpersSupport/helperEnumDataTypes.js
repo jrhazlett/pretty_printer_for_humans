@@ -46,18 +46,16 @@ export default class helperEnumDataTypes {
       return helperEnumDataTypes.fieldSymbol;
     }
 
-    // Check if object is anything ( results like null / undefined will return false )
+    // Check if object is anything
     if (arg) {
       // If constructor is an Object then return the object as the type
-      if (arg instanceof Object) {
+      if (typeof arg === "object") {
         if (arg instanceof Error) {
           return helperEnumDataTypes.fieldError;
         }
-
         if (arg instanceof Promise) {
           return helperEnumDataTypes.fieldPromise;
         }
-
         return helperEnumDataTypes.fieldObject;
       }
     }
