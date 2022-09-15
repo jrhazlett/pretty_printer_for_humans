@@ -198,11 +198,11 @@ export default class helperProcessChildComplexLast {
           new HelperObjectForStack(
             helperEnumDataTypes.fieldEitherNonIterableOrString,
             argObjectFromStack.fieldIntLayersIn,
-            helperGlobals.getStringFromArg(
+            helperGlobals.getStringFromArgViaEnumDataType(
               argObjectChildForStack.fieldKey,
               argObjectChildForStack.fieldIntDataType
             ),
-            helperGlobals.getStringFromArg(
+            helperGlobals.getStringFromArgViaEnumDataType(
               argObjectChildForStack.fieldValue,
               argObjectChildForStack.fieldIntDataType
             )

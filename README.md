@@ -12,6 +12,38 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ### Updates and fixes
 
+#### Ver. 1.1.5
+
+Printer changes:
+
+Data type management is now handled within a `typeof` + `switch` combo to eek out
+a slightly faster series of evaluations.
+
+Support function changes:
+
+NOTE: **None** of the changes mentioned here affect `pformat`, `pprint`, or any
+of their directly associated functions.
+
+Changed:
+All paths handled in-library are now arrays. This change addresses a few risks:
+
+- The resulting paths no longer require type conversions
+- Avoids issues which could block string conversions
+
+`getArrayOfStringsPathsInArg()` is now `getArrayOfPathsInArg()`
+This function now returns an 'array of arrays'. Each child array in this returned value
+represents an individual path.
+
+New functions:
+
+See later in this document for details on how to use these functions.
+
+getValueAtPath() - Returns the stored value if the path exists.
+I planned on saving this for another library, but this one is fine too.
+
+isPathInArg() - Returns true if following the path within the arg leads to a
+stored value.
+
 #### Ver. 1.1.4
 
 Fixed crash where `[Object: null prototype]` wasn't properly id'd as an object.
@@ -35,7 +67,7 @@ All functions in `prettyPrinterForHumansMultiThreading` now end with the `Async`
 of `MultiThreading` in the names.
 
 New functions added to `prettyPrinterForHumansMultiThreading`:<br>
-getArrayOfStringsPathsInArgAsync()<br>
+getArrayOfPathsInArgAsync()<br>
 isKeyInArgAsync()
 
 Added smarter code to the worker. This only really affects people intending to clone the code and change it. Details
@@ -387,7 +419,7 @@ whatever is printed next, but the value for this can be any string.
 
 ---
 
-## Additional functions
+## Additional single-thread functions
 
 NOTE: All these functions take the same arguments as `pformat()`
 
@@ -406,12 +438,116 @@ console.log().
 NOTE: There is no async equivalent to this function. The assumption is if you call it, its because you want it to print
 immediately.
 
-### Other functions...
+### Other functions (outside of pformat)...
 
-`getArrayOfStringsPathsInArg( arg )`
+`getArrayOfPathsInArg( arg )`
 
 Returns a sorted array of possible paths within arg.
 If arg is not an array / object, the returned array will be empty.
+
+Note: The resulting array _should_ still be sorted.
+
+`getValueInArgAtPath( arg, argArrayPath )`
+
+Returns the stored value accessed via a given path.
+Yes, you can include array indexes. How they work: <br>
+
+- They can be string or number
+- **Must** be convertible to an int. Decimal values will be treated like 'bad keys'.
+- All keys are case-sensitive
+
+```
+import prettyPrinterForHumans from "pretty_printer_for_humans"
+
+const data = {
+    "A" : "VAL_A",
+    "B" : "VAL_B",
+    "ARRAY" : [
+        1,
+        2,
+        [ 3, 4, 5 ]
+    ],
+    "Object" : {
+        "C" : "VAL_C",
+        "D" : "VAL_D",
+        "Object.2" : {
+            "E": "VAL_E",
+            "F": "VAL_F",
+        }
+    }
+}
+
+console.log( prettyPrinterForHumans.getValueInArgAtPath(
+    [
+        "Object",
+        "Object.2",
+        "F",
+    ],
+    data
+) )
+
+// Output after running
+
+VAL_F
+```
+
+"BUT! What if the path is bad!? I bet this gives some kind of ultra-vague message, which means
+more hours of diagnosing the issue."
+
+```
+import prettyPrinterForHumans from "pretty_printer_for_humans"
+
+    const data = {
+        "A" : "VAL_A",
+        "B" : "VAL_B",
+        "ARRAY" : [
+            1,
+            2,
+            [ 3, 4, 5 ]
+        ],
+        "Object" : {
+            "C" : "VAL_C",
+            "D" : "VAL_D",
+            "Object.2" : {
+                "E": "VAL_E",
+                "F": "VAL_F",
+            }
+        }
+    }
+
+    console.log( prettyPrinterForHumans.getValueInArgAtPath(
+        [
+            "Object",
+            "Object.2",
+            "BROKEN_KEY",
+            "BROKEN_KEY2",
+            "BROKEN_KEY3"
+        ],
+        data
+    ) )
+
+// Output after running
+
+Error: Failed to navigate path
+keyAtFailure = BROKEN_KEY
+arrayPath = Object,Object.2,BROKEN_KEY,BROKEN_KEY2,BROKEN_KEY3
+arrayPathThatExists = Object,Object.2
+arrayPathMissing = BROKEN_KEY,BROKEN_KEY2,BROKEN_KEY3
+arrayOfAvailableKeysAtFailure = E,F
+dataTypeAtFailure = object
+    at Function._getErrorBecausePathFailed (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_pushed_to_git/pretty_printer_for_humans/src/prettyPrinterForHumans.js:229:12)
+    at Function.getValueAtPath (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_pushed_to_git/pretty_printer_for_humans/src/prettyPrinterForHumans.js:182:50)
+    at main (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_test_install/test_install/index.js:35:41)
+    at file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_test_install/test_install/index.js:64:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:183:25)
+    at async Loader.import (node:internal/modules/esm/loader:178:24)
+    at async Object.loadESM (node:internal/process/esm_loader:68:5)
+    at async handleMainPromise (node:internal/modules/run_main:63:12)
+```
+
+`getValueAtPathInArgAsync( argArrayPath, arg )`
+
+As per usual, this does the same thing as
 
 `isKeyInArg( arg, argKey, argBoolCaseSensitive )`
 
@@ -423,6 +559,23 @@ If false, then this search does a case-insensitive locale comparison.
 
 NOTE: This only supports key lookups and **not** array indexes. It seemed kinda pointless to put "0" as an argument,
 and have the function return 'true' immediately upon coming across a non-empty array.
+
+`isKeyInArgAsync( arg, argKey, argBoolCaseSensitive )`
+
+This is the async version of `isKeyInArg()`
+
+`isPathInArg( argArrayPath, arg )`
+
+Returns true if the path exists within arg's structure, and false if it doesn't.
+
+This uses similar pathing logic as `getValueAtPathInArg()`:
+
+- Strings are tolerated for array indexes (but not decimal values)
+- Case-sensitive
+
+`isPathInArgAsync( argArrayPath, arg )`
+
+This is the async version of `isPathInArg()`
 
 `isRecursive( arg )`
 
@@ -463,12 +616,23 @@ NOTE: There are **no** synchronous functions that are part of this import. ALL '
 
 ### Functions
 
-`getArrayOfStringsPathsInArgAsync()`
+`getArrayOfPathsInArgAsync()`
 
 Returns a sorted array of possible paths within arg.
+Ver 1.1.5 - Each 'path' stored within this array is also an array.
+
 If arg is not an array / object, the returned array will be empty.
 
 Accomplishes this by executing the work on another thread.
+
+`getValueAtPathInArgAsync( argArrayPath, arg )`
+
+Fetches the value at the given path. This happens on a 2nd thread.
+
+The function returns a promise, which turns into the value at the path upon resolution.
+
+If the path doesn't exist, then the promise will resolve into an error object with a comprehensive
+data dump of why the path didn't work.
 
 `isKeyInArgAsync( arg, argKey, argBoolCaseSensitive = true )`
 
@@ -482,6 +646,13 @@ NOTE: This only supports key lookups and **not** array indexes. It seemed kinda 
 and have the function return 'true' immediately upon coming across a non-empty array.
 
 Accomplishes this by executing the work on another thread.
+
+`isPathInArgAsync( argArrayPath, arg )`
+
+This is the same as `isPathInArg()` except it executes on another thread.
+
+It takes the array and uses its keys to drill into arg and grab the stored value. The function itself returns
+a promise, which becomes a boolean statement after resolution.
 
 `pformatAsync( arg, { /*options*/ } )`
 

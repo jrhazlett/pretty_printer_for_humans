@@ -198,11 +198,11 @@ export default class helperProcessChild {
           new HelperObjectForStack(
             argObjectChildForStack.fieldIntDataType,
             argObjectFromStack.fieldIntLayersIn,
-            helperGlobals.getStringFromArg(
+            helperGlobals.getStringFromArgViaEnumDataType(
               argObjectChildForStack.fieldKey,
               argObjectChildForStack.fieldIntDataType
             ),
-            helperGlobals.getStringFromArg(
+            helperGlobals.getStringFromArgViaEnumDataType(
               argObjectChildForStack.fieldValue,
               argObjectChildForStack.fieldIntDataType
             )

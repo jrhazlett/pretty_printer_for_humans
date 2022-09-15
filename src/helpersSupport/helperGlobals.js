@@ -32,13 +32,35 @@ export default class helperGlobals {
   };
 
   /**
+   * This function is a less efficient version of getStringFromArgViaEnumDataType()
+   * It exists to functions with simpler overhead like getValueAtPath()
+   *
+   * Javascript's `${}` doesn't work in *all* cases, so this function is necessary to compensate.
+   *
+   * @param {any} arg
+   * @returns string
+   * */
+  static getStringFromArg = (arg) => {
+    switch (typeof arg) {
+      //
+      // Reminder: symbols do *not* support `${}`
+      //
+      case "symbol":
+        return arg.toString();
+
+      default:
+        return `${arg}`;
+    }
+  };
+
+  /**
    * Javascript's `${}` doesn't work in *all* cases, so this function is necessary to compensate.
    *
    * @param {any} arg
    * @param {number} argEnumDataType
    * @returns string
    * */
-  static getStringFromArg = (arg, argEnumDataType) => {
+  static getStringFromArgViaEnumDataType = (arg, argEnumDataType) => {
     switch (argEnumDataType) {
       //
       // Reminder: symbols do *not* support `${}`

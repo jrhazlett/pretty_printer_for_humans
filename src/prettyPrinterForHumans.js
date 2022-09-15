@@ -19,22 +19,22 @@ export default class prettyPrinterForHumans {
   // Get
   //
   /**
-   * This returns a sorted array of strings.
+   * This returns a sorted array of arrays. Each arr
    *
    * @param {any} arg
    * @returns []
    * */
-  static getArrayOfStringsPathsInArg = (arg) => {
+  static getArrayOfPathsInArg = (arg) => {
     const helperCircularReferences = new HelperCircularReferences();
 
     const arrayToReturn = [];
 
     const stackToProcess = [
-      [arg, helperEnumDataTypes.getEnumDataType(arg), ""],
+      [arg, helperEnumDataTypes.getEnumDataType(arg), []],
     ];
 
     while (stackToProcess.length > 0) {
-      const [item, itemEnumDataType, itemStringPath] = stackToProcess.pop();
+      const [item, itemEnumDataType, itemArrayPath] = stackToProcess.pop();
       switch (itemEnumDataType) {
         case helperEnumDataTypes.fieldArray:
           for (
@@ -45,24 +45,24 @@ export default class prettyPrinterForHumans {
             const itemSub = item[itemIntIndex];
             const itemEnumDataType =
               helperEnumDataTypes.getEnumDataType(itemSub);
-            const itemStringPathSub = prettyPrinterForHumans._getStringPath(
-              itemStringPath,
-              `${itemIntIndex}`
+            const itemArrayPathSub = prettyPrinterForHumans._getArrayPath(
+              itemArrayPath,
+              itemIntIndex
             );
 
             if (helperCircularReferences.isAlreadyTraversed(itemSub)) {
               arrayToReturn.push(
-                prettyPrinterForHumans._getStringPathWithCircularReference(
-                  itemStringPathSub,
+                prettyPrinterForHumans._getArrayPathWithCircularReference(
+                  itemArrayPathSub,
                   itemEnumDataType
                 )
               );
             } else {
-              arrayToReturn.push(itemStringPathSub);
+              arrayToReturn.push(itemArrayPathSub);
               stackToProcess.push([
                 itemSub,
                 itemEnumDataType,
-                itemStringPathSub,
+                itemArrayPathSub,
               ]);
             }
           }
@@ -79,66 +79,240 @@ export default class prettyPrinterForHumans {
             const itemSub = item[itemKeySub];
             const itemEnumDataType =
               helperEnumDataTypes.getEnumDataType(itemSub);
-            const itemStringPathSub = prettyPrinterForHumans._getStringPath(
-              itemStringPath,
-              `${itemKeySub}`
+            const itemArrayPathSub = prettyPrinterForHumans._getArrayPath(
+              itemArrayPath,
+              itemKeySub
             );
 
             if (helperCircularReferences.isAlreadyTraversed(itemSub)) {
               arrayToReturn.push(
-                prettyPrinterForHumans._getStringPathWithCircularReference(
-                  itemStringPathSub,
+                prettyPrinterForHumans._getArrayPathWithCircularReference(
+                  itemArrayPathSub,
                   itemEnumDataType
                 )
               );
             } else {
-              arrayToReturn.push(itemStringPathSub);
+              arrayToReturn.push(itemArrayPathSub);
               stackToProcess.push([
                 itemSub,
                 itemEnumDataType,
-                itemStringPathSub,
+                itemArrayPathSub,
               ]);
             }
           }
           break;
       }
     }
-
     return helperFormatting.getArrayOfStringsSortedCaseInsensitive(
       arrayToReturn
     );
   };
 
   /**
-   * @param {string} argStringPath
+   * @param {[]} argArrayPath
    * @param {number} argEnumDataType
-   * @returns string
+   * @returns []
    * */
-  static _getStringPathWithCircularReference = (
-    argStringPath,
+  static _getArrayPathWithCircularReference = (
+    argArrayPath,
     argEnumDataType
   ) => {
     switch (argEnumDataType) {
       case helperEnumDataTypes.fieldArray:
-        return argStringPath + " [ CIRCULAR REFERENCE ]";
+        return [...argArrayPath, "[ CIRCULAR REFERENCE ]"];
 
       case helperEnumDataTypes.fieldObject:
-        return argStringPath + " { CIRCULAR REFERENCE }";
+        return [...argArrayPath, "{ CIRCULAR REFERENCE }"];
 
       default:
-        return argStringPath;
+        return argArrayPath;
     }
   };
 
   /**
-   * @param {string} argStringPathPrefix
-   * @param {string} argStringKeyNew
-   * @returns string
+   * @param {[]} argArrayPathPrefix
+   * @param {any} argKeyNew
    * */
-  static _getStringPath = (argStringPathPrefix, argStringKeyNew) => {
-    return argStringPathPrefix.length === 0
-      ? argStringKeyNew
-      : argStringPathPrefix + "." + argStringKeyNew;
+  static _getArrayPath = (argArrayPathPrefix, argKeyNew) => {
+    return [...argArrayPathPrefix, argKeyNew];
+  };
+
+  /**
+   * This attempts to get the value stored at the end of path
+   * If the path fails, then this function returns an Error object answering
+   * the following questions:
+   * - What key failed?
+   * - What is the path used?
+   * - Which part of the path exists?
+   * - Which part of the path is missing?
+   *
+   * @param {any} arg
+   * @param {[]} argArrayPath
+   * @returns any
+   * */
+  static getValueAtPathInArg = (argArrayPath, arg) => {
+    const arrayOfKeysThatExist = [];
+
+    let item = arg;
+    for (
+      let itemIntIndex = 0, intLength = argArrayPath.length;
+      itemIntIndex < intLength;
+      itemIntIndex++
+    ) {
+      let itemKey = argArrayPath[itemIntIndex];
+      switch (helperEnumDataTypes.getEnumDataType(item)) {
+        //
+        // Array
+        //
+        case helperEnumDataTypes.fieldArray:
+          //
+          // Convert key to an index for the array
+          //
+          const itemIndex = prettyPrinterForHumans._getIntIndexFromKey(itemKey);
+          //
+          // If itemIndex is defined, then continue processing it. Otherwise,
+          // return an Error.
+          //
+          if (itemIndex !== undefined) {
+            //
+            // If index is within the range of the array, then update...
+            // item
+            // arrayOfKeysThatExist
+            //
+            // Otherwise, return Error.
+            //
+            if (0 <= itemIndex && itemIndex < item.length) {
+              item = item[itemIndex];
+              arrayOfKeysThatExist.push(itemKey);
+            } else {
+              return prettyPrinterForHumans._getErrorBecausePathFailed(
+                item,
+                argArrayPath,
+                arrayOfKeysThatExist,
+                itemKey
+              );
+            }
+          } else {
+            return prettyPrinterForHumans._getErrorBecausePathFailed(
+              item,
+              argArrayPath,
+              arrayOfKeysThatExist,
+              itemKey
+            );
+          }
+          break;
+        //
+        // Object
+        //
+        case helperEnumDataTypes.fieldObject:
+          //
+          // If the key exists, then update item and arrayOfKeysThatExist
+          // Otherwise, return Error.
+          //
+          if (item.hasOwnProperty(itemKey)) {
+            item = item[itemKey];
+            arrayOfKeysThatExist.push(itemKey);
+          } else {
+            return prettyPrinterForHumans._getErrorBecausePathFailed(
+              item,
+              argArrayPath,
+              arrayOfKeysThatExist,
+              itemKey
+            );
+          }
+          break;
+        //
+        // In all other cases, the path failed
+        //
+        default:
+          return prettyPrinterForHumans._getErrorBecausePathFailed(
+            item,
+            argArrayPath,
+            arrayOfKeysThatExist,
+            itemKey
+          );
+      }
+    }
+    //
+    // If we get this far, then return the resulting item
+    //
+    return item;
+  };
+
+  /**
+   * This attempts to get the value stored at the end of path
+   * If the path fails, then this function returns an Error object answering
+   * the following questions:
+   * - What key failed?
+   * - What is the path used?
+   * - Which part of the path exists?
+   * - Which part of the path is missing?
+   *
+   * @param {any} arg
+   * @param {[]} argArrayPath
+   * @returns any
+   * */
+  static getValueAtPathInArgAsync = (argArrayPath, arg) => {
+    return new Promise((resolve, reject) => {
+      const result = prettyPrinterForHumans.getValueAtPathInArg(
+        argArrayPath,
+        arg
+      );
+      if (result instanceof Error) {
+        reject(result);
+      } else {
+        resolve(result);
+      }
+    });
+  };
+
+  /**
+   * @param {any} arg
+   * @param {[]} argArrayPath
+   * @param {[]} argArrayPathThatExists
+   * @param {any} argKeyAtFailure
+   * */
+  static _getErrorBecausePathFailed = (
+    arg,
+    argArrayPath,
+    argArrayPathThatExists,
+    argKeyAtFailure
+  ) => {
+    const arrayToReturn = [
+      `Failed to navigate path`,
+      `keyAtFailure = ${helperGlobals.getStringFromArg(argKeyAtFailure)}`,
+      `arrayPath = ${argArrayPath}`,
+      `arrayPathThatExists = ${argArrayPathThatExists}`,
+      `arrayPathMissing = ${argArrayPath.slice(argArrayPathThatExists.length)}`,
+    ];
+
+    switch (typeof arg) {
+      case "object":
+        if (arg === null) {
+          arrayToReturn.push(`No keys available because node is null`);
+        } else if (Array.isArray(arg)) {
+          arrayToReturn.push(`rangeOfIndexesAvailable = 0 - ${arg.length - 1}`);
+        } else {
+          arrayToReturn.push(
+            `arrayOfAvailableKeysAtFailure = ${Object.keys(arg)}`
+          );
+        }
+        break;
+
+      default:
+        arrayToReturn.push(
+          `No keys available because node is not a type of object`
+        );
+        break;
+    }
+
+    arrayToReturn.push(`dataTypeAtFailure = ${typeof arg}`);
+
+    return Error(
+      arrayToReturn.reduce(
+        (itemStringPrev, itemString) => itemStringPrev + "\n" + itemString
+      )
+    );
   };
 
   //
@@ -266,6 +440,82 @@ export default class prettyPrinterForHumans {
       );
     });
   };
+
+  /**
+   * @param {[]} argArrayPath
+   * @param {any} arg
+   * @returns boolean
+   * */
+  static isPathInArg = (argArrayPath, arg) => {
+    let item = arg;
+    for (
+      let itemIntIndex = 0, intLength = argArrayPath.length;
+      itemIntIndex < intLength;
+      itemIntIndex++
+    ) {
+      let itemKey = argArrayPath[itemIntIndex];
+      switch (helperEnumDataTypes.getEnumDataType(item)) {
+        //
+        // Array
+        //
+        case helperEnumDataTypes.fieldArray:
+          const itemIndex = prettyPrinterForHumans._getIntIndexFromKey(itemKey);
+          //
+          // If we don't get a viable result from the int function, then the key isn't
+          // viable as an array index. Return false in that case.
+          //
+          if (itemIndex !== undefined) {
+            //
+            // If index is outside the array's range, then return false, otherwise update
+            // item.
+            //
+            if (0 <= itemIndex && itemIndex < item.length) {
+              item = item[itemIndex];
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+          break;
+        //
+        // Object
+        //
+        case helperEnumDataTypes.fieldObject:
+          //
+          // If item contains key, then update item, otherwise, return false since
+          // the path failed.
+          //
+          if (item.hasOwnProperty(itemKey)) {
+            item = item[itemKey];
+          } else {
+            return false;
+          }
+          break;
+        //
+        //
+        //
+        default:
+          return false;
+      }
+    }
+    //
+    // If we get this far, then all checks passed
+    //
+    return true;
+  };
+
+  /**
+   * @param {[]} argArrayPath
+   * @param {any} arg
+   * @returns Promise
+   * */
+  static isPathInArgAsync = (argArrayPath, arg) => {
+    return new Promise((resolve) => {
+      resolve(prettyPrinterForHumans.isPathInArg(argArrayPath, arg));
+    });
+  };
+
   /**
    * This function returns true if the top layer children has at least one array or object
    *
@@ -589,5 +839,34 @@ export default class prettyPrinterForHumans {
    * */
   static pprint = (arg, argHelperOptions = {}) => {
     console.log(prettyPrinterForHumans.pformat(arg, argHelperOptions));
+  };
+
+  /**
+   * @param {any} argKey
+   * */
+  static _getIntIndexFromKey = (argKey) => {
+    switch (typeof argKey) {
+      //
+      // Reminder: In tests, this appears to be 'ok' for using to reference arrays
+      //
+      case "bigint":
+        return argKey;
+      //
+      // If the data type is a number, then it needs to be an int to be valid
+      //
+      case "number":
+        return Number.isInteger(argKey) ? argKey : undefined;
+      //
+      // If the key is a string, then check it for only digits and return the
+      // the resulting int
+      //
+      case "string":
+        return /^\d+$/.test(argKey) ? parseInt(argKey) : undefined;
+      //
+      // In all other cases, return undefined
+      //
+      default:
+        return undefined;
+    }
   };
 }
