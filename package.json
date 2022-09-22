@@ -1,15 +1,32 @@
 {
   "name": "pretty_printer_for_humans",
-  "version": "1.1.5",
-  "author": "James Hazlett",
-  "email": "james.hazlett.npm@gmail.com",
+  "version": "1.1.6",
+  "author": "James Hazlett <james.hazlett.npm@gmail.com>",
   "url": "https://github.com/jrhazlett/pretty_printer_for_humans",
   "description": "Library for generating human-friendly strings from a given data structure",
   "license": "MIT",
   "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "alphabetical",
+    "async",
+    "data",
+    "json",
+    "multi-threading",
+    "multithreading",
+    "organize",
+    "print",
+    "pprint",
+    "pretty_printer",
+    "prettyPrinter",
+    "sort"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jrhazlett/pretty_printer_for_humans.git"
+  },
   "scripts": {
     "main": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "type": "module"
+  }
 }

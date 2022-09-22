@@ -10,101 +10,6 @@ Github: https://github.com/jrhazlett/pretty_printer_for_humans
 
 ---
 
-### Updates and fixes
-
-#### Ver. 1.1.5
-
-Printer changes:
-
-Data type management is now handled within a `typeof` + `switch` combo to eek out
-a slightly faster series of evaluations.
-
-Support function changes:
-
-NOTE: **None** of the changes mentioned here affect `pformat`, `pprint`, or any
-of their directly associated functions.
-
-Changed:
-All paths handled in-library are now arrays. This change addresses a few risks:
-
-- The resulting paths no longer require type conversions
-- Avoids issues which could block string conversions
-
-`getArrayOfStringsPathsInArg()` is now `getArrayOfPathsInArg()`
-This function now returns an 'array of arrays'. Each child array in this returned value
-represents an individual path.
-
-New functions:
-
-See later in this document for details on how to use these functions.
-
-getValueAtPath() - Returns the stored value if the path exists.
-I planned on saving this for another library, but this one is fine too.
-
-isPathInArg() - Returns true if following the path within the arg leads to a
-stored value.
-
-#### Ver. 1.1.4
-
-Fixed crash where `[Object: null prototype]` wasn't properly id'd as an object.
-Tested against Express req objects.
-
-#### Ver. 1.1.3
-
-Bug fix: Removed extra console messages from previous debugging changes.
-
-#### Ver. 1.1.0
-
-Added support for symbols.
-
-#### Ver. 1.0.9
-
-Name scheme changes:<br>
-'Sync' was removed from all function names. From now on, if the function name doesn't have the 'Async' suffix, then
-assume its execution is synchronous.
-
-All functions in `prettyPrinterForHumansMultiThreading` now end with the `Async` suffix. There's no longer any mention
-of `MultiThreading` in the names.
-
-New functions added to `prettyPrinterForHumansMultiThreading`:<br>
-getArrayOfPathsInArgAsync()<br>
-isKeyInArgAsync()
-
-Added smarter code to the worker. This only really affects people intending to clone the code and change it. Details
-documented later in the readme, as well as in the code.
-
-`prettyPrinterForHumansMultiThreading` now has its own section in the readme.
-
-Theoretical performance improvement: Swapped out `.toLowerCase()` for case-insensitive string compares with
-`.localCompare()` with a static option object. I also implemented the same swap for `.sort()` functions.
-
-#### Ver. 1.0.8
-
-Added multi-threading equivalents for (see lower sections for details)
-getArrayOfPathsInArg()
-isKeyInArg()
-
-#### Ver. 1.0.7
-
-Fixed bug where circular reference tracker pre-maturely registered false positives
-Added performance improvement to case-insensitive string comparisons
-Added functions (see lower sections for details):
-getArrayOfPathsInArg()<br>
-isKeyInArg()
-
-#### Ver. 1.0.6
-
-Fixed static references in prettyPrint functions.
-
-#### Ver. 1.0.5
-
--Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
-blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
-`pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
--Fixed pathing issue where worker path didn't work for library installs.
-
----
-
 "Stare at the data long enough, and sometimes the data stares back."
 
 If you've ever ran an especially large json package through a pretty printing library only for it to print keys in its
@@ -120,6 +25,8 @@ Top features:
 - Auto-handles circular references by default
 - Multi-threading support
 - Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
+
+Note: Update log at bottom of document
 
 ## Notes on data safety
 
@@ -491,8 +398,7 @@ console.log( prettyPrinterForHumans.getValueInArgAtPath(
 VAL_F
 ```
 
-"BUT! What if the path is bad!? I bet this gives some kind of ultra-vague message, which means
-more hours of diagnosing the issue."
+If the path to the value does not exist...
 
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans"
@@ -882,12 +788,101 @@ https://www.jetbrains.com/webstorm/
 Really, 'pretty_printer' was already taken. I decided to add the 'for_humans' bit to distinguish this library for
 being **meant** for human consumption and navigation.
 
-### I'm not human. Does this mean I can't use the library?
 
-Not at all. This library is meant to be free for use by all parties. :P
+### Updates and fixes
 
-### Can I contact you?
+#### Ver. 1.1.6
 
-I'm certainly open to communication, but I can't guarantee a response.
+Added search terms for npm <br>
+Bumped up version to get readme to show up again in chrome
 
-Also, please avoid contacting me with questions about Javascript itself.
+#### Ver. 1.1.5
+
+Printer changes:
+
+Data type management is now handled within a `typeof` + `switch` combo to eek out
+a slightly faster series of evaluations.
+
+Support function changes:
+
+NOTE: **None** of the changes mentioned here affect `pformat`, `pprint`, or any
+of their directly associated functions.
+
+Changed:
+All paths handled in-library are now arrays. This change addresses a few risks:
+
+- The resulting paths no longer require type conversions
+- Avoids issues which could block string conversions
+
+`getArrayOfStringsPathsInArg()` is now `getArrayOfPathsInArg()`
+This function now returns an 'array of arrays'. Each child array in this returned value
+represents an individual path.
+
+New functions:
+
+See later in this document for details on how to use these functions.
+
+getValueAtPath() - Returns the stored value if the path exists.
+I planned on saving this for another library, but this one is fine too.
+
+isPathInArg() - Returns true if following the path within the arg leads to a
+stored value.
+
+#### Ver. 1.1.4
+
+Fixed crash where `[Object: null prototype]` wasn't properly id'd as an object.
+Tested against Express req objects.
+
+#### Ver. 1.1.3
+
+Bug fix: Removed extra console messages from previous debugging changes.
+
+#### Ver. 1.1.0
+
+Added support for symbols.
+
+#### Ver. 1.0.9
+
+Name scheme changes:<br>
+'Sync' was removed from all function names. From now on, if the function name doesn't have the 'Async' suffix, then
+assume its execution is synchronous.
+
+All functions in `prettyPrinterForHumansMultiThreading` now end with the `Async` suffix. There's no longer any mention
+of `MultiThreading` in the names.
+
+New functions added to `prettyPrinterForHumansMultiThreading`:<br>
+getArrayOfPathsInArgAsync()<br>
+isKeyInArgAsync()
+
+Added smarter code to the worker. This only really affects people intending to clone the code and change it. Details
+documented later in the readme, as well as in the code.
+
+`prettyPrinterForHumansMultiThreading` now has its own section in the readme.
+
+Theoretical performance improvement: Swapped out `.toLowerCase()` for case-insensitive string compares with
+`.localCompare()` with a static option object. I also implemented the same swap for `.sort()` functions.
+
+#### Ver. 1.0.8
+
+Added multi-threading equivalents for (see lower sections for details)
+getArrayOfPathsInArg()
+isKeyInArg()
+
+#### Ver. 1.0.7
+
+Fixed bug where circular reference tracker pre-maturely registered false positives
+Added performance improvement to case-insensitive string comparisons
+Added functions (see lower sections for details):
+getArrayOfPathsInArg()<br>
+isKeyInArg()
+
+#### Ver. 1.0.6
+
+Fixed static references in prettyPrint functions.
+
+#### Ver. 1.0.5
+
+-Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
+blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
+`pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
+-Fixed pathing issue where worker path didn't work for library installs.
