@@ -6,6 +6,7 @@ import helperFormatting from "./helpersSupport/helperFormatting.js";
 import helperGlobals from "./helpersSupport/helperGlobals.js";
 import HelperObjectForStack from "./helpersSupport/helperObjectForStack.js";
 import helperProcessArray from "./helpersProcessing/helperProcessArray.js";
+import helperProcessMap from "./helpersProcessing/helperProcessMap.js";
 import helperProcessObject from "./helpersProcessing/helperProcessObject.js";
 import HelperOptions from "./helpersSupport/helperOptions.js";
 
@@ -617,6 +618,11 @@ export default class prettyPrinterForHumans {
         arrayOfStringsOutput.push(`[`);
         stringClosure = `]`;
         break;
+
+      case helperEnumDataTypes.fieldMap:
+        arrayOfStringsOutput.push(`Map(`);
+        stringClosure = `)`;
+        break;
       //
       // Output opener for object
       //
@@ -664,6 +670,17 @@ export default class prettyPrinterForHumans {
           );
           break;
         //
+        // Map
+        //
+        case helperEnumDataTypes.fieldMap:
+          helperProcessMap.processMap(
+            arrayStackToProcess,
+            helperCircularReferences,
+            argHelperOptions,
+            itemObjectFromStack
+          );
+          break;
+        //
         // Object
         //
         case helperEnumDataTypes.fieldObject:
@@ -674,9 +691,8 @@ export default class prettyPrinterForHumans {
             itemObjectFromStack
           );
           break;
-
         //
-        //
+        // Circular reference
         //
         case helperEnumDataTypes.fieldCircularReference:
           //
@@ -781,12 +797,6 @@ export default class prettyPrinterForHumans {
     //
     // Build the string to return
     //
-    // Reminder:
-    // - reduce() will throw an error if ran against an empty array, so do a size check ahead of time
-    // - reduce() is a bit more performant than join()
-    //
-    //let stringToReturn = arrayOfStringsOutput.length > 0 ? arrayOfStringsOutput.reduce( (itemStringPrev, itemString) => itemStringPrev + `\n` + itemString ) : ``;
-
     let stringToReturn;
     if (arrayOfStringsOutput.length > 0) {
       stringToReturn = arrayOfStringsOutput.reduce(

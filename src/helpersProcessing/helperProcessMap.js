@@ -10,7 +10,7 @@ import HelperOptions from "../helpersSupport/helperOptions.js";
 import helperProcessChild from "../helpersProcessingChildren/helperProcessChild.js";
 import helperProcessChildComplexLast from "../helpersProcessingChildren/helperProcessChildComplexLast.js";
 
-export default class helperProcessObject {
+export default class helperProcessMap {
   /**
    * Process object's keys and associated children
    *
@@ -19,7 +19,7 @@ export default class helperProcessObject {
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * */
-  static processObject = (
+  static processMap = (
     argArrayStackToUpdate,
     argHelperCircularReferences,
     argHelperOptions,
@@ -28,7 +28,7 @@ export default class helperProcessObject {
     const enumSortOptions = HelperOptions.fieldEnumSortOptions;
     switch (argHelperOptions.argEnumSortOption) {
       case enumSortOptions.fieldOptionPrintAlphabetical:
-        helperProcessObject._processObjectPrintAlphabetical(
+        helperProcessMap._processMapPrintAlphabetical(
           argArrayStackToUpdate,
           argHelperCircularReferences,
           argHelperOptions,
@@ -37,7 +37,7 @@ export default class helperProcessObject {
         break;
 
       case enumSortOptions.fieldOptionPrintComplexLast:
-        helperProcessObject._processObjectPrintComplexLast(
+        helperProcessMap._processMapPrintComplexLast(
           argArrayStackToUpdate,
           argHelperCircularReferences,
           argHelperOptions,
@@ -46,7 +46,7 @@ export default class helperProcessObject {
         break;
 
       case enumSortOptions.fieldOptionPrintOriginalOrder:
-        helperProcessObject._processObjectPrintOriginalOrder(
+        helperProcessMap._processMapPrintOriginalOrder(
           argArrayStackToUpdate,
           argHelperCircularReferences,
           argHelperOptions,
@@ -57,7 +57,7 @@ export default class helperProcessObject {
       // If no option is selected, then default to complex objects last
       //
       default:
-        helperProcessObject._processObjectPrintComplexLast(
+        helperProcessMap._processMapPrintComplexLast(
           argArrayStackToUpdate,
           argHelperCircularReferences,
           argHelperOptions,
@@ -75,15 +75,15 @@ export default class helperProcessObject {
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * */
-  static _processObjectPrintAlphabetical = (
+  static _processMapPrintAlphabetical = (
     argArrayStackToUpdate,
     argHelperCircularReferences,
     argHelperOptions,
     argObjectFromStack
   ) => {
-    let arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive(
-      Object.keys(argObjectFromStack.fieldValue)
-    );
+    let arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive([
+      ...argObjectFromStack.fieldValue.keys(),
+    ]);
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     //
     // Go through each key and process the associated value
@@ -94,7 +94,7 @@ export default class helperProcessObject {
       itemIntIndex--
     ) {
       const itemKey = arrayOfKeys[itemIntIndex];
-      const itemValue = argObjectFromStack.fieldValue[itemKey];
+      const itemValue = argObjectFromStack.fieldValue.get(itemKey);
       helperProcessChild.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,
@@ -116,16 +116,15 @@ export default class helperProcessObject {
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * */
-  static _processObjectPrintComplexLast = (
+  static _processMapPrintComplexLast = (
     argArrayStackToUpdate,
     argHelperCircularReferences,
     argHelperOptions,
     argObjectFromStack
   ) => {
     const arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive(
-      Object.keys(argObjectFromStack.fieldValue)
+      [...argObjectFromStack.fieldValue.keys()]
     );
-    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     //
     // Route keys to complex and simple
     //
@@ -138,7 +137,7 @@ export default class helperProcessObject {
         itemIntIndex++
       ) {
         const itemKey = arrayOfKeys[itemIntIndex];
-        helperProcessObject._routeKeysToComplexOrSimple(
+        helperProcessMap._routeKeysToComplexOrSimple(
           arrayOfKeys,
           arrayOfPairsKeysAndTypesComplex,
           arrayOfPairsKeysAndTypesSimple,
@@ -152,7 +151,7 @@ export default class helperProcessObject {
         itemIntIndex < intLength;
         itemIntIndex++
       ) {
-        helperProcessObject._routeKeysToComplexOrSimple(
+        helperProcessMap._routeKeysToComplexOrSimple(
           arrayOfKeys,
           arrayOfPairsKeysAndTypesComplex,
           arrayOfPairsKeysAndTypesSimple,
@@ -179,7 +178,7 @@ export default class helperProcessObject {
         argHelperOptions,
         new HelperObjectForStack(
           itemEnumDataType,
-          intLayersIn,
+          argObjectFromStack.fieldIntLayersIn + 1,
           itemKey,
           itemValue
         ),
@@ -189,7 +188,6 @@ export default class helperProcessObject {
     //
     // Append simple objects to output
     //
-
     for (
       let itemIntIndex = arrayOfPairsKeysAndTypesSimple.length - 1,
         intLength = 0;
@@ -205,7 +203,7 @@ export default class helperProcessObject {
         argHelperOptions,
         new HelperObjectForStack(
           itemEnumDataType,
-          intLayersIn,
+          argObjectFromStack.fieldIntLayersIn + 1,
           itemKey,
           itemValue
         ),
@@ -228,7 +226,7 @@ export default class helperProcessObject {
     argKey,
     argObjectFromStack
   ) => {
-    const itemValue = argObjectFromStack.fieldValue[argKey];
+    const itemValue = argObjectFromStack.fieldValue.get(argKey);
     const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
 
     if (helperEnumDataTypes.isComplex(itemEnumType)) {
@@ -252,14 +250,14 @@ export default class helperProcessObject {
    * @param {HelperOptions} argHelperOptions
    * @param {HelperObjectForStack} argObjectFromStack
    * */
-  static _processObjectPrintOriginalOrder = (
+  static _processMapPrintOriginalOrder = (
     argArrayStackToUpdate,
     argHelperCircularReferences,
     argHelperOptions,
     argObjectFromStack
   ) => {
-    const arrayOfKeys = Object.keys(argObjectFromStack.fieldValue);
-    const intLayersInt = argObjectFromStack.fieldIntLayersIn + 1;
+    const arrayOfKeys = [...argObjectFromStack.fieldValue.keys()];
+    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     //
     // Go through each key and process the associated value
     //
@@ -269,7 +267,7 @@ export default class helperProcessObject {
       itemIntIndex--
     ) {
       const itemKey = arrayOfKeys[itemIntIndex];
-      const itemValue = argObjectFromStack.fieldValue[itemKey];
+      const itemValue = argObjectFromStack.fieldValue.get(itemKey);
 
       helperProcessChild.processChild(
         argArrayStackToUpdate,
@@ -277,7 +275,7 @@ export default class helperProcessObject {
         argHelperOptions,
         new HelperObjectForStack(
           helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersInt,
+          intLayersIn,
           itemKey,
           itemValue
         ),

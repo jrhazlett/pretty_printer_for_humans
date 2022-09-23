@@ -125,15 +125,16 @@ export default class helperFormatting {
     argHelperOptions,
     argObjectFromStack
   ) => {
+    let stringToReturn;
     if (
       helperFormatting._isSingleItemObject(
         argArrayOfStringsOutput,
         argArrayStackToProcess
       )
     ) {
-      return argObjectFromStack.fieldValue;
+      stringToReturn = argObjectFromStack.fieldValue;
     } else {
-      return helperFormatting._getStringPlusComma(
+      stringToReturn = helperFormatting._getStringPlusComma(
         argArrayOfStringsOutput,
         argArrayStackToProcess,
         argHelperOptions.argStringIndentation.repeat(
@@ -144,6 +145,7 @@ export default class helperFormatting {
           argObjectFromStack.fieldValue
       );
     }
+    return stringToReturn;
   };
 
   /**
@@ -161,7 +163,7 @@ export default class helperFormatting {
     );
   };
 
-  static regexIsClosure = new RegExp("/[" + "[" + "{" + "]{1}$/g");
+  static regexIsClosure = /[\[{]{1}|[Map(]$/;
 
   /**
    * @param {[]} argArrayOfStringsOutput
@@ -173,16 +175,19 @@ export default class helperFormatting {
     argArrayStackToProcess,
     argString
   ) => {
+    let stringToReturn;
     if (
       argArrayOfStringsOutput.length === 0 &&
       argArrayStackToProcess.length === 1
     ) {
-      return argString;
+      stringToReturn = argString;
     } else {
-      return argArrayStackToProcess.length > 0 &&
+      stringToReturn =
+        argArrayStackToProcess.length > 0 &&
         !helperFormatting.regexIsClosure.test(argString)
-        ? argString + `,`
-        : argString;
+          ? argString + `,`
+          : argString;
     }
+    return stringToReturn;
   };
 }

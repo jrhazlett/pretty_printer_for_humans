@@ -91,6 +91,62 @@ export default class helperProcessChild {
         );
         break;
       //
+      // Map
+      //
+      case helperEnumDataTypes.fieldMap:
+        //
+        // If int layers are defined, then print a summary value
+        //
+        if (
+          helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
+            argArrayStackToUpdate,
+            argHelperOptions,
+            argObjectFromStack,
+            `${argObjectChildForStack.fieldKey}`,
+            `Map( ... )`
+          )
+        ) {
+          return;
+        }
+        if (argHelperCircularReferences) {
+          if (
+            argHelperCircularReferences.updateStackWithCircularReferenceMessage(
+              argArrayStackToUpdate,
+              argObjectChildForStack,
+              argObjectFromStack
+            )
+          ) {
+            return;
+          }
+        }
+        //
+        // Append closure to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            ``,
+            `)`
+          )
+        );
+        //
+        // Append content to stack for processing
+        //
+        argArrayStackToUpdate.push(argObjectChildForStack);
+        //
+        // Append opener to stack for processing
+        //
+        argArrayStackToUpdate.push(
+          new HelperObjectForStack(
+            helperEnumDataTypes.fieldEitherNonIterableOrString,
+            argObjectFromStack.fieldIntLayersIn,
+            `${argObjectChildForStack.fieldKey}`,
+            `Map(`
+          )
+        );
+        break;
+      //
       // Object
       //
       case helperEnumDataTypes.fieldObject:

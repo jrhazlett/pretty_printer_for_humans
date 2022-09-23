@@ -79,6 +79,7 @@ export default class helperProcessArray {
     argHelperOptions,
     argObjectFromStack
   ) => {
+    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     for (
       let itemIntIndex = argObjectFromStack.fieldValue.length - 1,
         intLength = 0;
@@ -92,7 +93,7 @@ export default class helperProcessArray {
         argHelperOptions,
         new HelperObjectForStack(
           helperEnumDataTypes.getEnumDataType(itemValue),
-          argObjectFromStack.fieldIntLayersIn + 1,
+          intLayersIn,
           itemIntIndex,
           itemValue
         ),
@@ -113,6 +114,7 @@ export default class helperProcessArray {
     argHelperOptions,
     argObjectFromStack
   ) => {
+    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     for (
       let itemIntIndex = argObjectFromStack.fieldValue.length - 1,
         intLength = 0;
@@ -126,7 +128,7 @@ export default class helperProcessArray {
         argHelperOptions,
         new HelperObjectForStack(
           helperEnumDataTypes.getEnumDataType(itemValue),
-          argObjectFromStack.fieldIntLayersIn + 1,
+          intLayersIn,
           itemIntIndex,
           itemValue
         ),

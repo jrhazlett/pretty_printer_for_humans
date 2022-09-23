@@ -23,6 +23,8 @@ export default class helperEnumDataTypes {
 
   static fieldSymbol = 8;
 
+  static fieldMap = 9;
+
   /**
    * @param {any} arg
    * @returns number
@@ -38,27 +40,12 @@ export default class helperEnumDataTypes {
       // Object
       //
       case "object":
-        //
-        // Reminder: typeof [] = 'object'
-        //
-        if (Array.isArray(arg)) {
-          return helperEnumDataTypes.fieldArray;
-        }
-        if (arg instanceof Error) {
-          return helperEnumDataTypes.fieldError;
-        }
-        if (arg === null) {
-          return helperEnumDataTypes.fieldEitherNonIterableOrString;
-        }
-        if (arg instanceof Promise) {
-          return helperEnumDataTypes.fieldPromise;
-        }
-        return helperEnumDataTypes.fieldObject;
+        return helperEnumDataTypes._getEnumDataTypeForObject(arg);
       //
       // Symbol
       //
+      // Reminder: This is important because symbols do *not* support `${}` string conversions
       case "symbol":
-        // Reminder: This is important because symbols do *not* support `${}` string conversions
         return helperEnumDataTypes.fieldSymbol;
 
       case "undefined":
@@ -66,9 +53,48 @@ export default class helperEnumDataTypes {
       //
       // All other cases
       //
+      // If we get this far, then all other possibilities have been ruled out
       default:
-        // If we get this far, then all other possibilities have been ruled out
         return helperEnumDataTypes.fieldEitherNonIterableOrString;
     }
   };
+
+  /**
+   * @param {Object} argObject
+   * @return number
+   * */
+  static _getEnumDataTypeForObject = (argObject) => {
+    switch (true) {
+      case Array.isArray(argObject):
+        return helperEnumDataTypes.fieldArray;
+
+      case argObject instanceof Error:
+        return helperEnumDataTypes.fieldError;
+
+      case argObject instanceof Map:
+        return helperEnumDataTypes.fieldMap;
+
+      case argObject === null:
+        return helperEnumDataTypes.fieldEitherNonIterableOrString;
+
+      case argObject instanceof Promise:
+        return helperEnumDataTypes.fieldPromise;
+
+      default:
+        return helperEnumDataTypes.fieldObject;
+    }
+  };
+
+  static fieldSetOfEnumsComplexTypes = new Set([
+    helperEnumDataTypes.fieldArray,
+    helperEnumDataTypes.fieldMap,
+    helperEnumDataTypes.fieldObject,
+  ]);
+
+  /**
+   * @param {number} argEnumType
+   * @returns boolean
+   * */
+  static isComplex = (argEnumType) =>
+    helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType);
 }

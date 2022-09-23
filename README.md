@@ -25,6 +25,7 @@ Top features:
 - Auto-handles circular references by default
 - Multi-threading support
 - Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
+- Map support
 
 Note: Update log at bottom of document
 
@@ -76,11 +77,6 @@ functions.
 If true, this option prevents infinite loops due to circular references. It does this by adding an object, and storing
 it in a set. If the id already exists in the set at a later point then the script will not process that reference a 2nd
 time.
-
-Yes, it intentionally breaks the `__` style rule, and is wordy on purpose. The point is for this to avoid colliding
-with any pre-existing properties in the data.
-
-NOTE: This attribute will NOT appear in the string returned by pformat() in ALL cases.
 
 ### argBoolPrintWarningOnCircularReference
 
@@ -273,7 +269,11 @@ This prints keys in their original order.
 
 This sets how far into a data structure the script will print data. i.e. If an object is passed to the function and
 this value is set to 1, then the output will only include the keys in that object. If a child also has children, then
-it will print a summary value instead. i.e. `[ ... ]` for arrays, and `{ ... }` for objects.
+it will print a summary value instead.
+i.e.
+`[ ... ]` for arrays
+`Map( ... )` for maps
+`{ ... }` for objects
 
 The default value for this option is 'undefined', and this means the printer will attempt to print all layers.
 
@@ -398,7 +398,10 @@ console.log( prettyPrinterForHumans.getValueInArgAtPath(
 VAL_F
 ```
 
-If the path to the value does not exist...
+_**If the path to the value does not exist...**_
+
+Note: This is the result of the console logging an Error() object. This will not interrupt the
+library or the app.
 
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans"
@@ -421,7 +424,7 @@ import prettyPrinterForHumans from "pretty_printer_for_humans"
         }
     }
 
-    console.log( prettyPrinterForHumans.getValueInArgAtPath(
+    const err = prettyPrinterForHumans.getValueInArgAtPath(
         [
             "Object",
             "Object.2",
@@ -430,7 +433,9 @@ import prettyPrinterForHumans from "pretty_printer_for_humans"
             "BROKEN_KEY3"
         ],
         data
-    ) )
+    )
+
+    console.log( err )
 
 // Output after running
 
@@ -788,15 +793,34 @@ https://www.jetbrains.com/webstorm/
 Really, 'pretty_printer' was already taken. I decided to add the 'for_humans' bit to distinguish this library for
 being **meant** for human consumption and navigation.
 
+## Updates and fixes
 
-### Updates and fixes
+### Ver. 1.1.7
 
-#### Ver. 1.1.6
+Added Map support. This overrides the library's original behavior, where it originally regarded them
+as objects.
+
+Example output:
+
+```
+Map(
+    1 : A,
+    2 : B,
+    3 : C,
+)
+```
+
+Outside of the different enclosures, the map plays by the same rules as arrays and
+objects.
+
+Fixed an issue where in some cases, the library added a ',' where it shouldn't have.
+
+### Ver. 1.1.6
 
 Added search terms for npm <br>
 Bumped up version to get readme to show up again in chrome
 
-#### Ver. 1.1.5
+### Ver. 1.1.5
 
 Printer changes:
 
@@ -815,6 +839,7 @@ All paths handled in-library are now arrays. This change addresses a few risks:
 - Avoids issues which could block string conversions
 
 `getArrayOfStringsPathsInArg()` is now `getArrayOfPathsInArg()`
+
 This function now returns an 'array of arrays'. Each child array in this returned value
 represents an individual path.
 
@@ -828,20 +853,20 @@ I planned on saving this for another library, but this one is fine too.
 isPathInArg() - Returns true if following the path within the arg leads to a
 stored value.
 
-#### Ver. 1.1.4
+### Ver. 1.1.4
 
 Fixed crash where `[Object: null prototype]` wasn't properly id'd as an object.
 Tested against Express req objects.
 
-#### Ver. 1.1.3
+### Ver. 1.1.3
 
 Bug fix: Removed extra console messages from previous debugging changes.
 
-#### Ver. 1.1.0
+### Ver. 1.1.0
 
 Added support for symbols.
 
-#### Ver. 1.0.9
+### Ver. 1.0.9
 
 Name scheme changes:<br>
 'Sync' was removed from all function names. From now on, if the function name doesn't have the 'Async' suffix, then
@@ -862,27 +887,28 @@ documented later in the readme, as well as in the code.
 Theoretical performance improvement: Swapped out `.toLowerCase()` for case-insensitive string compares with
 `.localCompare()` with a static option object. I also implemented the same swap for `.sort()` functions.
 
-#### Ver. 1.0.8
+### Ver. 1.0.8
 
-Added multi-threading equivalents for (see lower sections for details)
-getArrayOfPathsInArg()
-isKeyInArg()
-
-#### Ver. 1.0.7
-
-Fixed bug where circular reference tracker pre-maturely registered false positives
-Added performance improvement to case-insensitive string comparisons
-Added functions (see lower sections for details):
+Added multi-threading equivalents for (see lower sections for details)<br>
 getArrayOfPathsInArg()<br>
 isKeyInArg()
 
-#### Ver. 1.0.6
+### Ver. 1.0.7
+
+Fixed bug where circular reference tracker pre-maturely registered false positives
+Added performance improvement to case-insensitive string comparisons
+Added functions (see lower sections for details):<br>
+getArrayOfPathsInArg()<br>
+isKeyInArg()
+
+### Ver. 1.0.6
 
 Fixed static references in prettyPrint functions.
 
-#### Ver. 1.0.5
+### Ver. 1.0.5
 
--Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
+Compatibility fix: Multi-threading is now disconnected from the root import location. This prevents the import from
 blocking builds on non-Nodejs projects. To see how to import the multi-threading component, see the section for
 `pformatAsyncMultiThreaded( arg, { /*options*/ } )`.
--Fixed pathing issue where worker path didn't work for library installs.
+
+Fixed pathing issue where worker path didn't work for library installs.
