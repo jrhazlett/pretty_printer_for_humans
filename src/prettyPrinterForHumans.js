@@ -1,14 +1,41 @@
 "use strict";
+/*
+Reminders for updating library support...
 
+## All types need additions here:
+
+src/helpersSupport/helperEnumDataTypes.js
+-Add a numerical type to helperEnumDataTypes
+
+src/helpersProcessing
+-In all modules, add a switch entry for the data type
+
+src/helpersProcessingChildren
+-In all modules, add a switch entry for the data type
+
+
+## When adding a complex type, make the following additions:
+
+src/helpersProcessing
+-Add a support module here
+
+Note: For complex types, make sure to do the necessary print-friendly data conversions,
+since not all data types are print-friendly by default.
+
+src/helpersSupport/helperEnumDataTypes.js
+-Add the data type to helperEnumDataTypes.fieldSetOfEnumsComplexTypes
+Reminder: This is necessary to achieve the desired effect for fieldOptionPrintComplexLast
+*/
 import HelperCircularReferences from "./helpersSupport/helperCircularReferences.js";
 import helperEnumDataTypes from "./helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "./helpersSupport/helperFormatting.js";
 import helperGlobals from "./helpersSupport/helperGlobals.js";
 import HelperObjectForStack from "./helpersSupport/helperObjectForStack.js";
+import HelperOptions from "./helpersSupport/helperOptions.js";
 import helperProcessArray from "./helpersProcessing/helperProcessArray.js";
 import helperProcessMap from "./helpersProcessing/helperProcessMap.js";
 import helperProcessObject from "./helpersProcessing/helperProcessObject.js";
-import HelperOptions from "./helpersSupport/helperOptions.js";
+import helperProcessSet from "./helpersProcessing/helperProcessSet.js";
 
 export default class prettyPrinterForHumans {
   /**
@@ -630,6 +657,10 @@ export default class prettyPrinterForHumans {
         arrayOfStringsOutput.push(`{`);
         stringClosure = `}`;
         break;
+      case helperEnumDataTypes.fieldSet:
+        arrayOfStringsOutput.push(`Set(`)
+        stringClosure = `)`
+        break
       //
       // This should never run, but its here to be explicit
       //
@@ -691,6 +722,17 @@ export default class prettyPrinterForHumans {
             itemObjectFromStack
           );
           break;
+        //
+        // Set
+        //
+        case helperEnumDataTypes.fieldSet:
+          helperProcessSet.processSet(
+              arrayStackToProcess,
+              helperCircularReferences,
+              argHelperOptions,
+              itemObjectFromStack
+          )
+          break
         //
         // Circular reference
         //

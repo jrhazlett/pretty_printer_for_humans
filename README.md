@@ -795,6 +795,52 @@ being **meant** for human consumption and navigation.
 
 ## Updates and fixes
 
+### Ver. 1.1.8
+
+Fixes:
+
+Fixed an issue where Symbol() could crash the Map printing process
+
+(Hopefully) This update should resolve any future Symbol()-related errors.
+
+Updates:
+
+Added Set support. Since sets are not order dependent, these have a custom sorting process, which sorts the values, 
+putting the complex objects last. (This also accounts for Symbol() values).
+
+```
+// Input
+
+const setSub = new Set()
+const arrayForSetSubOne = [ Symbol( "set1.2" ), "set1.3", "set1.1", ]
+for ( let item of arrayForSetSubOne ) { setSub.add( item.toString() ) }
+
+const setInput = new Set()
+const arrayForSet = [ "set0.3", setSub, "set0.1", "set0.2", ]
+for ( let item of arrayForSet ) { setInput.add( item ) }
+
+console.log( await prettyPrinterForHumans.pformatAsync(
+    setInput,
+    {
+        argStringNameToOutput: "result",
+    }
+) )
+
+// Output
+
+result =
+Set(
+    0 : set0.1,
+    1 : set0.2,
+    2 : set0.3,
+    3 : Set(
+        0 : Symbol(set1.2),
+        1 : set1.1,
+        2 : set1.3,
+    ),
+)
+```
+
 ### Ver. 1.1.7
 
 Added Map support. This overrides the library's original behavior, where it originally regarded them

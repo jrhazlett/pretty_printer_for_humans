@@ -25,6 +25,8 @@ export default class helperEnumDataTypes {
 
   static fieldMap = 9;
 
+  static fieldSet = 10;
+
   /**
    * @param {any} arg
    * @returns number
@@ -80,6 +82,9 @@ export default class helperEnumDataTypes {
       case argObject instanceof Promise:
         return helperEnumDataTypes.fieldPromise;
 
+      case argObject instanceof Set:
+        return helperEnumDataTypes.fieldSet;
+
       default:
         return helperEnumDataTypes.fieldObject;
     }
@@ -89,12 +94,54 @@ export default class helperEnumDataTypes {
     helperEnumDataTypes.fieldArray,
     helperEnumDataTypes.fieldMap,
     helperEnumDataTypes.fieldObject,
+    helperEnumDataTypes.fieldSet,
   ]);
+
+  /**
+   * @param {any} arg
+   * @returns boolean
+   * */
+  static isComplexArg = ( arg ) => {
+    return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(helperEnumDataTypes.getEnumDataType( arg ))
+  }
 
   /**
    * @param {number} argEnumType
    * @returns boolean
    * */
-  static isComplex = (argEnumType) =>
-    helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType);
+  static isComplexEnumType = (argEnumType) => {
+    return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

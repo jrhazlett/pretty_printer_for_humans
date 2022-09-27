@@ -5,6 +5,7 @@ This module processes objects and routes their children to one of the
 */
 import helperEnumDataTypes from "../helpersSupport/helperEnumDataTypes.js";
 import helperFormatting from "../helpersSupport/helperFormatting.js";
+import helperGlobals from "../helpersSupport/helperGlobals.js";
 import HelperObjectForStack from "../helpersSupport/helperObjectForStack.js";
 import HelperOptions from "../helpersSupport/helperOptions.js";
 import helperProcessChild from "../helpersProcessingChildren/helperProcessChild.js";
@@ -102,7 +103,9 @@ export default class helperProcessMap {
         new HelperObjectForStack(
           helperEnumDataTypes.getEnumDataType(itemValue),
           intLayersIn,
-          itemKey,
+          // Reminder: This prevents a crash relating to Symbol() keys.
+          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+          helperGlobals.getStringFromArg(itemKey),
           itemValue
         ),
         argObjectFromStack
@@ -204,7 +207,9 @@ export default class helperProcessMap {
         new HelperObjectForStack(
           itemEnumDataType,
           argObjectFromStack.fieldIntLayersIn + 1,
-          itemKey,
+          // Reminder: This prevents a crash relating to Symbol() keys.
+          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+          helperGlobals.getStringFromArg( itemKey ),
           itemValue
         ),
         argObjectFromStack
@@ -229,7 +234,7 @@ export default class helperProcessMap {
     const itemValue = argObjectFromStack.fieldValue.get(argKey);
     const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
 
-    if (helperEnumDataTypes.isComplex(itemEnumType)) {
+    if (helperEnumDataTypes.isComplexEnumType(itemEnumType)) {
       argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
         argKey,
         itemValue,
@@ -276,7 +281,9 @@ export default class helperProcessMap {
         new HelperObjectForStack(
           helperEnumDataTypes.getEnumDataType(itemValue),
           intLayersIn,
-          itemKey,
+          // Reminder: This prevents a crash relating to Symbol() keys.
+          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+          helperGlobals.getStringFromArg( itemKey ),
           itemValue
         ),
         argObjectFromStack

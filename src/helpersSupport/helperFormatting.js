@@ -23,8 +23,8 @@ export default class helperFormatting {
     // https://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-array-of-string-in-javascript
     //
     return argArray.sort((itemStringPrev, itemString) =>
-      `${itemStringPrev}`.localeCompare(
-        `${itemString}`,
+      `${helperGlobals.getStringFromArg(itemStringPrev)}`.localeCompare(
+        `${helperGlobals.getStringFromArg(itemString)}`,
         undefined,
         helperFormatting.optionsForLocaleCompare
       )

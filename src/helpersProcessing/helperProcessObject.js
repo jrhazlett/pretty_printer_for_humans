@@ -231,7 +231,7 @@ export default class helperProcessObject {
     const itemValue = argObjectFromStack.fieldValue[argKey];
     const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
 
-    if (helperEnumDataTypes.isComplex(itemEnumType)) {
+    if (helperEnumDataTypes.isComplexEnumType(itemEnumType)) {
       argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
         argKey,
         itemValue,
