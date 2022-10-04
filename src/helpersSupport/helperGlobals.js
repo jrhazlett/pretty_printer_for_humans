@@ -16,14 +16,12 @@ export default class helperGlobals {
     const stringFromCallback = argFunction
       .toString()
       .replace(helperGlobals.STRIP_COMMENTS, ``);
-
     const arrayToReturn = stringFromCallback
       .slice(
         stringFromCallback.indexOf("(") + 1,
         stringFromCallback.indexOf(")")
       )
       .match(helperGlobals.ARGUMENT_NAMES);
-
     return arrayToReturn === null
       ? []
       : arrayToReturn.filter((itemStringNameArg) =>
@@ -47,7 +45,6 @@ export default class helperGlobals {
       //
       case "symbol":
         return arg.toString();
-
       default:
         return `${arg}`;
     }
@@ -67,10 +64,33 @@ export default class helperGlobals {
       //
       case helperEnumDataTypes.fieldSymbol:
         return arg.toString();
-
       default:
         return `${arg}`;
     }
+  };
+
+  /**
+   * @param {[]} argIterable
+   * @return string
+   * */
+  static getStringPrintableFromIterable = (argIterable) => {
+    const arrayFromArg = Array.from(argIterable);
+    if (arrayFromArg.length === 0) {
+      return "[]";
+    }
+    const arrayToReturn = new Array(arrayFromArg.length);
+    for (
+      let itemIntIndex = 0, intLength = arrayFromArg.length;
+      itemIntIndex < intLength;
+      itemIntIndex++
+    ) {
+      arrayToReturn[itemIntIndex] = helperGlobals.getStringFromArg(
+        arrayFromArg[itemIntIndex]
+      );
+    }
+    return `[ ${arrayToReturn.reduce(
+      (itemStringPrev, itemString) => itemStringPrev + ", " + itemString
+    )} ]`;
   };
 
   static optionsForLocaleCompare = { sensitivity: "base" };

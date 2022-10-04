@@ -35,7 +35,6 @@ export default class helperProcessObject {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintComplexLast:
         helperProcessObject._processObjectPrintComplexLast(
           argArrayStackToUpdate,
@@ -44,7 +43,6 @@ export default class helperProcessObject {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintOriginalOrder:
         helperProcessObject._processObjectPrintOriginalOrder(
           argArrayStackToUpdate,
@@ -172,7 +170,6 @@ export default class helperProcessObject {
     ) {
       const [itemKey, itemValue, itemEnumDataType] =
         arrayOfPairsKeysAndTypesComplex[itemIntIndex];
-
       helperProcessChildComplexLast.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,
@@ -198,7 +195,6 @@ export default class helperProcessObject {
     ) {
       const [itemKey, itemValue, itemEnumDataType] =
         arrayOfPairsKeysAndTypesSimple[itemIntIndex];
-
       helperProcessChildComplexLast.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,
@@ -230,7 +226,6 @@ export default class helperProcessObject {
   ) => {
     const itemValue = argObjectFromStack.fieldValue[argKey];
     const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
-
     if (helperEnumDataTypes.isComplexEnumType(itemEnumType)) {
       argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
         argKey,
@@ -270,7 +265,6 @@ export default class helperProcessObject {
     ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue[itemKey];
-
       helperProcessChild.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,

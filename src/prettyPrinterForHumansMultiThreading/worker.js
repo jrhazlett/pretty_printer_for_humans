@@ -33,7 +33,6 @@ class _helperLocal {
     // Reminder: This attribute is necessary because the community seems really fuzzy about whether
     // or not the properties of a given object will always maintain their original order.
     let arrayOfStringNamesInOrder = argMessageReceived.argArrayOfKeysInOrder;
-
     let setOfStringNamesFromCallback = new Set(
       helperGlobals
         .getArrayOfNamesForParameters(argCallback)
@@ -41,7 +40,6 @@ class _helperLocal {
           (itemStringName) => itemStringName !== "argStringNameForFunction"
         )
     );
-
     const arrayToReturn = new Array(arrayOfStringNamesInOrder.length);
     for (
       let itemIntIndex = 0, intLength = arrayOfStringNamesInOrder.length;

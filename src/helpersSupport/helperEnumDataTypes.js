@@ -69,24 +69,48 @@ export default class helperEnumDataTypes {
     switch (true) {
       case Array.isArray(argObject):
         return helperEnumDataTypes.fieldArray;
-
       case argObject instanceof Error:
         return helperEnumDataTypes.fieldError;
-
       case argObject instanceof Map:
         return helperEnumDataTypes.fieldMap;
-
       case argObject === null:
         return helperEnumDataTypes.fieldEitherNonIterableOrString;
-
       case argObject instanceof Promise:
         return helperEnumDataTypes.fieldPromise;
-
       case argObject instanceof Set:
         return helperEnumDataTypes.fieldSet;
-
       default:
         return helperEnumDataTypes.fieldObject;
+    }
+  };
+
+  /**
+   * @param {any} arg
+   * @returns string
+   * */
+  static getStringDataType = (arg) => {
+    const stringDataType = typeof arg;
+
+    switch (stringDataType) {
+      case "object":
+        switch (true) {
+          case Array.isArray(arg):
+            return "array";
+          case arg instanceof Error:
+            return "error";
+          case arg instanceof Map:
+            return "map";
+          case arg === null:
+            return "null";
+          case arg instanceof Promise:
+            return "promise";
+          case arg instanceof Set:
+            return "set";
+          default:
+            return "object";
+        }
+      default:
+        return stringDataType;
     }
   };
 
@@ -101,9 +125,11 @@ export default class helperEnumDataTypes {
    * @param {any} arg
    * @returns boolean
    * */
-  static isComplexArg = ( arg ) => {
-    return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(helperEnumDataTypes.getEnumDataType( arg ))
-  }
+  static isComplexArg = (arg) => {
+    return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(
+      helperEnumDataTypes.getEnumDataType(arg)
+    );
+  };
 
   /**
    * @param {number} argEnumType
@@ -111,37 +137,5 @@ export default class helperEnumDataTypes {
    * */
   static isComplexEnumType = (argEnumType) => {
     return helperEnumDataTypes.fieldSetOfEnumsComplexTypes.has(argEnumType);
-  }
+  };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

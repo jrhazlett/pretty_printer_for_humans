@@ -36,7 +36,6 @@ export default class helperProcessMap {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintComplexLast:
         helperProcessMap._processMapPrintComplexLast(
           argArrayStackToUpdate,
@@ -45,7 +44,6 @@ export default class helperProcessMap {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintOriginalOrder:
         helperProcessMap._processMapPrintOriginalOrder(
           argArrayStackToUpdate,
@@ -199,7 +197,6 @@ export default class helperProcessMap {
     ) {
       const [itemKey, itemValue, itemEnumDataType] =
         arrayOfPairsKeysAndTypesSimple[itemIntIndex];
-
       helperProcessChildComplexLast.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,
@@ -209,7 +206,7 @@ export default class helperProcessMap {
           argObjectFromStack.fieldIntLayersIn + 1,
           // Reminder: This prevents a crash relating to Symbol() keys.
           // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
-          helperGlobals.getStringFromArg( itemKey ),
+          helperGlobals.getStringFromArg(itemKey),
           itemValue
         ),
         argObjectFromStack
@@ -233,7 +230,6 @@ export default class helperProcessMap {
   ) => {
     const itemValue = argObjectFromStack.fieldValue.get(argKey);
     const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
-
     if (helperEnumDataTypes.isComplexEnumType(itemEnumType)) {
       argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
         argKey,
@@ -273,7 +269,6 @@ export default class helperProcessMap {
     ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue.get(itemKey);
-
       helperProcessChild.processChild(
         argArrayStackToUpdate,
         argHelperCircularReferences,
@@ -283,7 +278,7 @@ export default class helperProcessMap {
           intLayersIn,
           // Reminder: This prevents a crash relating to Symbol() keys.
           // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
-          helperGlobals.getStringFromArg( itemKey ),
+          helperGlobals.getStringFromArg(itemKey),
           itemValue
         ),
         argObjectFromStack

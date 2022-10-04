@@ -35,7 +35,6 @@ export default class helperProcessArray {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintComplexLast:
         this._processArrayComplexLast(
           argArrayStackToUpdate,
@@ -44,7 +43,6 @@ export default class helperProcessArray {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintOriginalOrder:
         this._processArray(
           argArrayStackToUpdate,
@@ -53,7 +51,6 @@ export default class helperProcessArray {
           argObjectFromStack
         );
         break;
-
       default:
         this._processArray(
           argArrayStackToUpdate,

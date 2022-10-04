@@ -795,6 +795,11 @@ being **meant** for human consumption and navigation.
 
 ## Updates and fixes
 
+### Ver. 1.1.9
+
+Added symbol support in cases where a path fails and needs to return printable info
+Fixed a bug where the pathing key data outputted as an 'object' rather than the individual keys
+
 ### Ver. 1.1.8
 
 Fixes:
@@ -805,7 +810,7 @@ Fixed an issue where Symbol() could crash the Map printing process
 
 Updates:
 
-Added Set support. Since sets are not order dependent, these have a custom sorting process, which sorts the values, 
+Added Set support. Since sets are not order dependent, these have a custom sorting process, which sorts the values,
 putting the complex objects last. (This also accounts for Symbol() values).
 
 ```

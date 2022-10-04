@@ -32,9 +32,6 @@ export default class helperProcessChildComplexLast {
     argObjectFromStack
   ) => {
     switch (argObjectChildForStack.fieldIntDataType) {
-      //
-      // Array
-      //
       case helperEnumDataTypes.fieldArray:
         helperProcessChildComplexLast._processArray(
           argArrayStackToUpdate,
@@ -44,9 +41,6 @@ export default class helperProcessChildComplexLast {
           argObjectFromStack
         );
         break;
-      //
-      // Map
-      //
       case helperEnumDataTypes.fieldMap:
         helperProcessChildComplexLast._processMap(
           argArrayStackToUpdate,
@@ -56,9 +50,6 @@ export default class helperProcessChildComplexLast {
           argObjectFromStack
         );
         break;
-      //
-      // Object
-      //
       case helperEnumDataTypes.fieldObject:
         helperProcessChildComplexLast._processObject(
           argArrayStackToUpdate,
@@ -68,21 +59,15 @@ export default class helperProcessChildComplexLast {
           argObjectFromStack
         );
         break;
-      //
-      // Set
-      //
       case helperEnumDataTypes.fieldSet:
         helperProcessChildComplexLast._processSet(
-            argArrayStackToUpdate,
-            argHelperCircularReferences,
-            argHelperOptions,
-            argObjectChildForStack,
-            argObjectFromStack
-        )
-        break
-      //
-      // Error
-      //
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          argObjectChildForStack,
+          argObjectFromStack
+        );
+        break;
       case helperEnumDataTypes.fieldError:
         argArrayStackToUpdate.push(
           new HelperObjectForStack(
@@ -93,9 +78,6 @@ export default class helperProcessChildComplexLast {
           )
         );
         break;
-      //
-      // Function
-      //
       case helperEnumDataTypes.fieldFunction:
         argArrayStackToUpdate.push(
           new HelperObjectForStack(
@@ -108,9 +90,6 @@ export default class helperProcessChildComplexLast {
           )
         );
         break;
-      //
-      // Promise
-      //
       case helperEnumDataTypes.fieldPromise:
         argArrayStackToUpdate.push(
           new HelperObjectForStack(
@@ -358,34 +337,34 @@ export default class helperProcessChildComplexLast {
    * @param {HelperObjectForStack} argObjectFromStack
    * */
   static _processSet = (
-      argArrayStackToUpdate,
-      argHelperCircularReferences,
-      argHelperOptions,
-      argObjectChildForStack,
-      argObjectFromStack
+    argArrayStackToUpdate,
+    argHelperCircularReferences,
+    argHelperOptions,
+    argObjectChildForStack,
+    argObjectFromStack
   ) => {
     //
     // If int layers are defined, then print a summary value
     //
     if (
-        helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
-            argArrayStackToUpdate,
-            argHelperOptions,
-            argObjectFromStack,
-            `${argObjectChildForStack.fieldKey}`,
-            `Set( ... )`
-        )
+      helperFormatting.getBoolAfterAttemptingToAddObjectFormattedForExceededLayer(
+        argArrayStackToUpdate,
+        argHelperOptions,
+        argObjectFromStack,
+        `${argObjectChildForStack.fieldKey}`,
+        `Set( ... )`
+      )
     ) {
       return;
     }
 
     if (argHelperCircularReferences) {
       if (
-          argHelperCircularReferences.updateStackWithCircularReferenceMessage(
-              argArrayStackToUpdate,
-              argObjectChildForStack,
-              argObjectFromStack
-          )
+        argHelperCircularReferences.updateStackWithCircularReferenceMessage(
+          argArrayStackToUpdate,
+          argObjectChildForStack,
+          argObjectFromStack
+        )
       ) {
         return;
       }
@@ -394,12 +373,12 @@ export default class helperProcessChildComplexLast {
     // Append closure to stack for processing
     //
     argArrayStackToUpdate.push(
-        new HelperObjectForStack(
-            helperEnumDataTypes.fieldEitherNonIterableOrString,
-            argObjectFromStack.fieldIntLayersIn,
-            ``,
-            `)`
-        )
+      new HelperObjectForStack(
+        helperEnumDataTypes.fieldEitherNonIterableOrString,
+        argObjectFromStack.fieldIntLayersIn,
+        ``,
+        `)`
+      )
     );
     //
     // Append content to stack for processing
@@ -409,57 +388,12 @@ export default class helperProcessChildComplexLast {
     // Append opener to stack for processing
     //
     argArrayStackToUpdate.push(
-        new HelperObjectForStack(
-            helperEnumDataTypes.fieldEitherNonIterableOrString,
-            argObjectFromStack.fieldIntLayersIn,
-            `${argObjectChildForStack.fieldKey}`,
-            `Set(`
-        )
+      new HelperObjectForStack(
+        helperEnumDataTypes.fieldEitherNonIterableOrString,
+        argObjectFromStack.fieldIntLayersIn,
+        `${argObjectChildForStack.fieldKey}`,
+        `Set(`
+      )
     );
   };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

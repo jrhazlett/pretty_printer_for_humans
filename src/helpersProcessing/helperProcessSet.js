@@ -36,7 +36,6 @@ export default class helperProcessSet {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintComplexLast:
         this._processSetComplexLast(
           argArrayStackToUpdate,
@@ -45,7 +44,6 @@ export default class helperProcessSet {
           argObjectFromStack
         );
         break;
-
       case enumSortOptions.fieldOptionPrintOriginalOrder:
         this._processSet(
           argArrayStackToUpdate,
@@ -54,7 +52,6 @@ export default class helperProcessSet {
           argObjectFromStack
         );
         break;
-
       default:
         this._processSet(
           argArrayStackToUpdate,
@@ -80,11 +77,12 @@ export default class helperProcessSet {
     argHelperOptions,
     argObjectFromStack
   ) => {
-    const arrayFromSet = helperProcessSet._getArrayFromSet( argObjectFromStack.fieldValue )
+    const arrayFromSet = helperProcessSet._getArrayFromSet(
+      argObjectFromStack.fieldValue
+    );
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     for (
-      let itemIntIndex = arrayFromSet.length - 1,
-        intLength = 0;
+      let itemIntIndex = arrayFromSet.length - 1, intLength = 0;
       itemIntIndex >= intLength;
       itemIntIndex--
     ) {
@@ -116,11 +114,12 @@ export default class helperProcessSet {
     argHelperOptions,
     argObjectFromStack
   ) => {
-    const arrayFromSet = helperProcessSet._getArrayFromSet( argObjectFromStack.fieldValue )
+    const arrayFromSet = helperProcessSet._getArrayFromSet(
+      argObjectFromStack.fieldValue
+    );
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
     for (
-      let itemIntIndex = arrayFromSet.length - 1,
-        intLength = 0;
+      let itemIntIndex = arrayFromSet.length - 1, intLength = 0;
       itemIntIndex >= intLength;
       itemIntIndex--
     ) {
@@ -139,11 +138,12 @@ export default class helperProcessSet {
       );
     }
   };
+
   /**
    * @param {Set} argSet
    * @returns []
    * */
-  static _getArrayFromSet = ( argSet ) => {
+  static _getArrayFromSet = (argSet) => {
     /*
     Reminders:
     This custom function is needed here to solve a couple of challenges...
@@ -152,65 +152,22 @@ export default class helperProcessSet {
     - Since we're doing the sort attempt, complex objects should move to the end
     - To avoid Symbol() from breaking the sort, all values need to go through the generic string converter
     */
-    const arrayFromSet = Array.from( argSet )
-    const arrayFromSetPrimitive = []
-    const arrayFromSetComplex = []
-    for ( let itemIntIndex = 0, intLength = arrayFromSet.length; itemIntIndex < intLength; itemIntIndex++ ) {
-      const item = arrayFromSet[ itemIntIndex ]
-      if ( helperEnumDataTypes.isComplexArg( item ) ) {
-        arrayFromSetComplex.push( item )
+    const arrayFromSet = Array.from(argSet);
+    const arrayFromSetPrimitive = [];
+    const arrayFromSetComplex = [];
+    for (
+      let itemIntIndex = 0, intLength = arrayFromSet.length;
+      itemIntIndex < intLength;
+      itemIntIndex++
+    ) {
+      const item = arrayFromSet[itemIntIndex];
+      if (helperEnumDataTypes.isComplexArg(item)) {
+        arrayFromSetComplex.push(item);
       } else {
         // Reminder: We need to do a string conversion here to prevent Symbol() from crashing the sort attempt
-        arrayFromSetPrimitive.push( helperGlobals.getStringFromArg( item ) )
+        arrayFromSetPrimitive.push(helperGlobals.getStringFromArg(item));
       }
     }
-    return [ ...arrayFromSetPrimitive.sort(), ...arrayFromSetComplex.sort(), ]
-  }
+    return [...arrayFromSetPrimitive.sort(), ...arrayFromSetComplex.sort()];
+  };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
