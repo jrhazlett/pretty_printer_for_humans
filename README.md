@@ -446,10 +446,10 @@ arrayPathThatExists = Object,Object.2
 arrayPathMissing = BROKEN_KEY,BROKEN_KEY2,BROKEN_KEY3
 arrayOfAvailableKeysAtFailure = E,F
 dataTypeAtFailure = object
-    at Function._getErrorBecausePathFailed (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_pushed_to_git/pretty_printer_for_humans/src/prettyPrinterForHumans.js:229:12)
-    at Function.getValueAtPath (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_pushed_to_git/pretty_printer_for_humans/src/prettyPrinterForHumans.js:182:50)
-    at main (file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_test_install/test_install/index.js:35:41)
-    at file:///Users/jameshazlett/Projects/nodejs/pretty_printer_for_humans/zzz_test_install/test_install/index.js:64:1
+    at Function._getErrorBecausePathFailed (...)
+    at Function.getValueAtPath (...)
+    at main (...)
+    at ...
     at ModuleJob.run (node:internal/modules/esm/module_job:183:25)
     at async Loader.import (node:internal/modules/esm/loader:178:24)
     at async Object.loadESM (node:internal/process/esm_loader:68:5)
