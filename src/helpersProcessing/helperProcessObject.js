@@ -86,24 +86,21 @@ export default class helperProcessObject {
     //
     // Go through each key and process the associated value
     //
-    for (
-      let itemIntIndex = arrayOfKeys.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = arrayOfKeys.length
+    while ( --itemIntIndex >= 0 ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue[itemKey];
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          itemKey,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              itemKey,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -129,83 +126,71 @@ export default class helperProcessObject {
     //
     let arrayOfPairsKeysAndTypesComplex = [];
     let arrayOfPairsKeysAndTypesSimple = [];
+    let itemIntIndex
     if (argHelperOptions.argBoolHandleCircularReferences) {
-      for (
-        let itemIntIndex = 0, intLength = arrayOfKeys.length;
-        itemIntIndex < intLength;
-        itemIntIndex++
-      ) {
+      itemIntIndex = -1
+      const intLength = arrayOfKeys.length
+      while ( ++itemIntIndex < intLength ) {
         const itemKey = arrayOfKeys[itemIntIndex];
         helperProcessObject._routeKeysToComplexOrSimple(
-          arrayOfKeys,
-          arrayOfPairsKeysAndTypesComplex,
-          arrayOfPairsKeysAndTypesSimple,
-          itemKey,
-          argObjectFromStack
+            arrayOfKeys,
+            arrayOfPairsKeysAndTypesComplex,
+            arrayOfPairsKeysAndTypesSimple,
+            itemKey,
+            argObjectFromStack
         );
       }
     } else {
-      for (
-        let itemIntIndex = 0, intLength = arrayOfKeys.length;
-        itemIntIndex < intLength;
-        itemIntIndex++
-      ) {
+      let itemIntIndex = -1
+      const intLength = arrayOfKeys.length
+      while ( ++itemIntIndex < intLength ) {
         helperProcessObject._routeKeysToComplexOrSimple(
-          arrayOfKeys,
-          arrayOfPairsKeysAndTypesComplex,
-          arrayOfPairsKeysAndTypesSimple,
-          arrayOfKeys[itemIntIndex],
-          argObjectFromStack
+            arrayOfKeys,
+            arrayOfPairsKeysAndTypesComplex,
+            arrayOfPairsKeysAndTypesSimple,
+            arrayOfKeys[itemIntIndex],
+            argObjectFromStack
         );
       }
     }
     //
     // Append complex objects to stack
     //
-    for (
-      let itemIntIndex = arrayOfPairsKeysAndTypesComplex.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    itemIntIndex = arrayOfPairsKeysAndTypesComplex.length
+    while ( --itemIntIndex >= 0 ) {
       const [itemKey, itemValue, itemEnumDataType] =
-        arrayOfPairsKeysAndTypesComplex[itemIntIndex];
+          arrayOfPairsKeysAndTypesComplex[itemIntIndex];
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          itemEnumDataType,
-          intLayersIn,
-          itemKey,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              itemEnumDataType,
+              intLayersIn,
+              itemKey,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
     //
     // Append simple objects to output
     //
-
-    for (
-      let itemIntIndex = arrayOfPairsKeysAndTypesSimple.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    itemIntIndex = arrayOfPairsKeysAndTypesSimple.length
+    while ( --itemIntIndex >= 0 ) {
       const [itemKey, itemValue, itemEnumDataType] =
-        arrayOfPairsKeysAndTypesSimple[itemIntIndex];
+          arrayOfPairsKeysAndTypesSimple[itemIntIndex];
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          itemEnumDataType,
-          intLayersIn,
-          itemKey,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              itemEnumDataType,
+              intLayersIn,
+              itemKey,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -258,24 +243,21 @@ export default class helperProcessObject {
     //
     // Go through each key and process the associated value
     //
-    for (
-      let itemIntIndex = arrayOfKeys.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = arrayOfKeys.length
+    while ( --itemIntIndex >= 0 ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue[itemKey];
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersInt,
-          itemKey,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersInt,
+              itemKey,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };

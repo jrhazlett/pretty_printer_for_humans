@@ -109,23 +109,23 @@ export default class prettyPrinterForHumans {
     argHelperCircularReferences,
     argStackToProcessToUpdate
   ) => {
-    for (
-      let itemIntIndex = 0, intLength = argArray.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+
+    let itemIntIndex = 0
+    const intLength = argArray.length;
+
+    while ( ++itemIntIndex < intLength ) {
       const itemSub = argArray[itemIntIndex];
       const itemEnumDataType = helperEnumDataTypes.getEnumDataType(itemSub);
       const itemArrayPathSub = prettyPrinterForHumans._getArrayPath(
-        argArrayPath,
-        itemIntIndex
+          argArrayPath,
+          itemIntIndex
       );
       if (argHelperCircularReferences.isAlreadyTraversed(itemSub)) {
         argArrayToReturnToUpdate.push(
-          prettyPrinterForHumans._getArrayPathWithCircularReference(
-            itemArrayPathSub,
-            itemEnumDataType
-          )
+            prettyPrinterForHumans._getArrayPathWithCircularReference(
+                itemArrayPathSub,
+                itemEnumDataType
+            )
         );
       } else {
         argArrayToReturnToUpdate.push(itemArrayPathSub);
@@ -153,24 +153,22 @@ export default class prettyPrinterForHumans {
     argStackToProcessToUpdate
   ) => {
     const arrayOfKeys = Object.keys(argObject);
-    for (
-      let itemIntIndex = 0, intLength = arrayOfKeys.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = arrayOfKeys.length;
+    while ( ++itemIntIndex < intLength ) {
       const itemKeySub = arrayOfKeys[itemIntIndex];
       const itemSub = argObject[itemKeySub];
       const itemEnumDataType = helperEnumDataTypes.getEnumDataType(itemSub);
       const itemArrayPathSub = prettyPrinterForHumans._getArrayPath(
-        argArrayPath,
-        itemKeySub
+          argArrayPath,
+          itemKeySub
       );
       if (argHelperCircularReferences.isAlreadyTraversed(itemSub)) {
         argArrayToReturnToUpdate.push(
-          prettyPrinterForHumans._getArrayPathWithCircularReference(
-            itemArrayPathSub,
-            itemEnumDataType
-          )
+            prettyPrinterForHumans._getArrayPathWithCircularReference(
+                itemArrayPathSub,
+                itemEnumDataType
+            )
         );
       } else {
         argArrayToReturnToUpdate.push(itemArrayPathSub);
@@ -198,24 +196,22 @@ export default class prettyPrinterForHumans {
     argStackToProcessToUpdate
   ) => {
     const arrayOfKeys = argMap.keys();
-    for (
-      let itemIntIndex = 0, intLength = arrayOfKeys.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = arrayOfKeys.length;
+    while ( ++itemIntIndex < intLength ) {
       const itemKeySub = arrayOfKeys[itemIntIndex];
       const itemSub = argMap.get(itemKeySub);
       const itemEnumDataType = helperEnumDataTypes.getEnumDataType(itemSub);
       const itemArrayPathSub = prettyPrinterForHumans._getArrayPath(
-        argArrayPath,
-        itemKeySub
+          argArrayPath,
+          itemKeySub
       );
       if (argHelperCircularReferences.isAlreadyTraversed(itemSub)) {
         argArrayToReturnToUpdate.push(
-          prettyPrinterForHumans._getArrayPathWithCircularReference(
-            itemArrayPathSub,
-            itemEnumDataType
-          )
+            prettyPrinterForHumans._getArrayPathWithCircularReference(
+                itemArrayPathSub,
+                itemEnumDataType
+            )
         );
       } else {
         argArrayToReturnToUpdate.push(itemArrayPathSub);
@@ -274,64 +270,63 @@ export default class prettyPrinterForHumans {
     const arrayOfKeysThatExist = [];
 
     let item = arg;
-    for (
-      let itemIntIndex = 0, intLength = argArrayPath.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+
+    let itemIntIndex = -1
+    const intLength = argArrayPath.length;
+    while ( ++itemIntIndex < intLength ) {
       let itemKey = argArrayPath[itemIntIndex];
       switch (helperEnumDataTypes.getEnumDataType(item)) {
-        //
-        // Array
-        //
+          //
+          // Array
+          //
         case helperEnumDataTypes.fieldArray:
           item = prettyPrinterForHumans._getValueAtPathInArgArray(
-            item,
-            arrayOfKeysThatExist,
-            argArrayPath,
-            itemKey
+              item,
+              arrayOfKeysThatExist,
+              argArrayPath,
+              itemKey
           );
           if (item instanceof Error) {
             return item;
           }
           break;
-        //
-        //
-        //
+          //
+          //
+          //
         case helperEnumDataTypes.fieldMap:
           item = prettyPrinterForHumans._getValueAtPathInArgMap(
-            arrayOfKeysThatExist,
-            argArrayPath,
-            itemKey,
-            item
+              arrayOfKeysThatExist,
+              argArrayPath,
+              itemKey,
+              item
           );
           if (item instanceof Error) {
             return item;
           }
           break;
-        //
-        // Object
-        //
+          //
+          // Object
+          //
         case helperEnumDataTypes.fieldObject:
           item = prettyPrinterForHumans._getValueAtPathInArgObject(
-            arrayOfKeysThatExist,
-            argArrayPath,
-            itemKey,
-            item
+              arrayOfKeysThatExist,
+              argArrayPath,
+              itemKey,
+              item
           );
           if (item instanceof Error) {
             return item;
           }
           break;
-        //
-        // In all other cases, the path failed
-        //
+          //
+          // In all other cases, the path failed
+          //
         default:
           return prettyPrinterForHumans._getErrorBecausePathFailed(
-            item,
-            argArrayPath,
-            arrayOfKeysThatExist,
-            itemKey
+              item,
+              argArrayPath,
+              arrayOfKeysThatExist,
+              itemKey
           );
       }
     }
@@ -565,15 +560,17 @@ export default class prettyPrinterForHumans {
 
     const stackToProcess = [[arg, enumDataTypeForArg]];
 
+
     while (stackToProcess.length > 0) {
       const [item, itemEnumDataType] = stackToProcess.pop();
+
+      let itemIntIndex
+      let intLength
       switch (itemEnumDataType) {
         case helperEnumDataTypes.fieldArray:
-          for (
-            let itemIntIndex = 0, intLength = item.length;
-            itemIntIndex < intLength;
-            itemIntIndex++
-          ) {
+          itemIntIndex = -1
+          intLength = item.length;
+          while ( ++itemIntIndex < intLength ) {
             const itemSub = item[itemIntIndex];
             if (!helperCircularReferences.isAlreadyTraversed(itemSub)) {
               stackToProcess.push([
@@ -601,11 +598,9 @@ export default class prettyPrinterForHumans {
           // If we get this far, then the key hasn't been found yet. Go through each child and add them to the stack.
           //
           const itemArrayOfValues = Object.values(item);
-          for (
-            let itemIntIndex = 0, intLength = itemArrayOfValues.length;
-            itemIntIndex < intLength;
-            itemIntIndex++
-          ) {
+          itemIntIndex = -1
+          intLength = itemArrayOfValues.length;
+          while ( ++itemIntIndex < intLength ) {
             const itemSub = itemArrayOfValues[itemIntIndex];
             if (!helperCircularReferences.isAlreadyTraversed(itemSub)) {
               stackToProcess.push([
@@ -635,18 +630,16 @@ export default class prettyPrinterForHumans {
       const stringKey = `${argKey}`;
       const arrayOfKeys = Object.keys(argObject);
 
-      for (
-        let itemIntIndex = 0, intLength = arrayOfKeys.length;
-        itemIntIndex < intLength;
-        itemIntIndex++
-      ) {
+      let itemIntIndex = -1
+      const intLength = arrayOfKeys.length;
+      while ( ++itemIntIndex < intLength ) {
         const itemStringKeyFromArray = `${arrayOfKeys[itemIntIndex]}`;
 
         if (
-          helperGlobals.logicAreStringsEqualCaseInsensitive(
-            itemStringKeyFromArray,
-            stringKey
-          )
+            helperGlobals.logicAreStringsEqualCaseInsensitive(
+                itemStringKeyFromArray,
+                stringKey
+            )
         ) {
           return true;
         }
@@ -679,16 +672,14 @@ export default class prettyPrinterForHumans {
    * */
   static isPathInArg = (argArrayPath, arg) => {
     let item = arg;
-    for (
-      let itemIntIndex = 0, intLength = argArrayPath.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = argArrayPath.length;
+    while ( ++itemIntIndex < intLength ) {
       let itemKey = argArrayPath[itemIntIndex];
       switch (helperEnumDataTypes.getEnumDataType(item)) {
-        //
-        // Array
-        //
+          //
+          // Array
+          //
         case helperEnumDataTypes.fieldArray:
           const itemIndex = prettyPrinterForHumans._getIntIndexFromKey(itemKey);
           //
@@ -709,9 +700,9 @@ export default class prettyPrinterForHumans {
             return false;
           }
           break;
-        //
-        // Object
-        //
+          //
+          // Object
+          //
         case helperEnumDataTypes.fieldObject:
           //
           // If item contains key, then update item, otherwise, return false since
@@ -723,9 +714,9 @@ export default class prettyPrinterForHumans {
             return false;
           }
           break;
-        //
-        //
-        //
+          //
+          //
+          //
         default:
           return false;
       }
@@ -761,15 +752,15 @@ export default class prettyPrinterForHumans {
     //
     // Prep stack for processing data structure
     //
+    let itemIntIndex
+    let intLength
     switch (enumTypeForRoot) {
       case helperEnumDataTypes.fieldArray:
-        for (
-          let itemIntIndex = 0, intLength = arg.length;
-          itemIntIndex < intLength;
-          itemIntIndex++
-        ) {
+        itemIntIndex = -1
+        intLength = arg.length;
+        while ( ++itemIntIndex < intLength ) {
           const itemEnumDataType = helperEnumDataTypes.getEnumDataType(
-            arg[itemIntIndex]
+              arg[itemIntIndex]
           );
           switch (itemEnumDataType) {
             case helperEnumDataTypes.fieldArray:
@@ -789,11 +780,9 @@ export default class prettyPrinterForHumans {
 
       case helperEnumDataTypes.fieldObject:
         const arrayOfKeys = Object.keys(arg);
-        for (
-          let itemIntIndex = 0, intLength = arrayOfKeys.length;
-          itemIntIndex < intLength;
-          itemIntIndex++
-        ) {
+        itemIntIndex = -1
+        intLength = arrayOfKeys.length;
+        while ( ++itemIntIndex < intLength ) {
           const itemValue = arg[arrayOfKeys[itemIntIndex]];
           switch (helperEnumDataTypes.getEnumDataType(itemValue)) {
             case helperEnumDataTypes.fieldArray:

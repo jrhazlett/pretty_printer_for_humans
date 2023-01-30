@@ -79,13 +79,11 @@ export default class helperGlobals {
       return "[]";
     }
     const arrayToReturn = new Array(arrayFromArg.length);
-    for (
-      let itemIntIndex = 0, intLength = arrayFromArg.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = arrayFromArg.length;
+    while ( ++itemIntIndex < intLength ) {
       arrayToReturn[itemIntIndex] = helperGlobals.getStringFromArg(
-        arrayFromArg[itemIntIndex]
+          arrayFromArg[itemIntIndex]
       );
     }
     return `[ ${arrayToReturn.reduce(

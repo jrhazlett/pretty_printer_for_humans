@@ -87,26 +87,23 @@ export default class helperProcessMap {
     //
     // Go through each key and process the associated value
     //
-    for (
-      let itemIntIndex = arrayOfKeys.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = arrayOfKeys.length
+    while ( --itemIntIndex >= 0 ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue.get(itemKey);
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          // Reminder: This prevents a crash relating to Symbol() keys.
-          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
-          helperGlobals.getStringFromArg(itemKey),
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              // Reminder: This prevents a crash relating to Symbol() keys.
+              // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+              helperGlobals.getStringFromArg(itemKey),
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -132,84 +129,73 @@ export default class helperProcessMap {
     let arrayOfPairsKeysAndTypesComplex = [];
     let arrayOfPairsKeysAndTypesSimple = [];
     if (argHelperOptions.argBoolHandleCircularReferences) {
-      for (
-        let itemIntIndex = 0, intLength = arrayOfKeys.length;
-        itemIntIndex < intLength;
-        itemIntIndex++
-      ) {
+      let itemIntIndex = -1
+      const intLength = arrayOfKeys.length;
+      while ( ++itemIntIndex < intLength ) {
         const itemKey = arrayOfKeys[itemIntIndex];
         helperProcessMap._routeKeysToComplexOrSimple(
-          arrayOfKeys,
-          arrayOfPairsKeysAndTypesComplex,
-          arrayOfPairsKeysAndTypesSimple,
-          itemKey,
-          argObjectFromStack
+            arrayOfKeys,
+            arrayOfPairsKeysAndTypesComplex,
+            arrayOfPairsKeysAndTypesSimple,
+            itemKey,
+            argObjectFromStack
         );
       }
     } else {
-      for (
-        let itemIntIndex = 0, intLength = arrayOfKeys.length;
-        itemIntIndex < intLength;
-        itemIntIndex++
-      ) {
+      let itemIntIndex = -1
+      const intLength = arrayOfKeys.length;
+      while ( ++itemIntIndex < intLength ) {
         helperProcessMap._routeKeysToComplexOrSimple(
-          arrayOfKeys,
-          arrayOfPairsKeysAndTypesComplex,
-          arrayOfPairsKeysAndTypesSimple,
-          arrayOfKeys[itemIntIndex],
-          argObjectFromStack
+            arrayOfKeys,
+            arrayOfPairsKeysAndTypesComplex,
+            arrayOfPairsKeysAndTypesSimple,
+            arrayOfKeys[itemIntIndex],
+            argObjectFromStack
         );
       }
     }
     //
     // Append complex objects to stack
     //
-    for (
-      let itemIntIndex = arrayOfPairsKeysAndTypesComplex.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex
+    itemIntIndex = arrayOfPairsKeysAndTypesComplex.length
+    while ( --itemIntIndex >= 0 ) {
       const [itemKey, itemValue, itemEnumDataType] =
-        arrayOfPairsKeysAndTypesComplex[itemIntIndex];
+          arrayOfPairsKeysAndTypesComplex[itemIntIndex];
 
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          itemEnumDataType,
-          argObjectFromStack.fieldIntLayersIn + 1,
-          itemKey,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              itemEnumDataType,
+              argObjectFromStack.fieldIntLayersIn + 1,
+              itemKey,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
     //
     // Append simple objects to output
     //
-    for (
-      let itemIntIndex = arrayOfPairsKeysAndTypesSimple.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    itemIntIndex = arrayOfPairsKeysAndTypesSimple.length
+    while ( --itemIntIndex >= 0 ) {
       const [itemKey, itemValue, itemEnumDataType] =
-        arrayOfPairsKeysAndTypesSimple[itemIntIndex];
+          arrayOfPairsKeysAndTypesSimple[itemIntIndex];
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          itemEnumDataType,
-          argObjectFromStack.fieldIntLayersIn + 1,
-          // Reminder: This prevents a crash relating to Symbol() keys.
-          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
-          helperGlobals.getStringFromArg(itemKey),
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              itemEnumDataType,
+              argObjectFromStack.fieldIntLayersIn + 1,
+              // Reminder: This prevents a crash relating to Symbol() keys.
+              // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+              helperGlobals.getStringFromArg(itemKey),
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -262,26 +248,23 @@ export default class helperProcessMap {
     //
     // Go through each key and process the associated value
     //
-    for (
-      let itemIntIndex = arrayOfKeys.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = arrayOfKeys.length
+    while ( --itemIntIndex >= 0 ) {
       const itemKey = arrayOfKeys[itemIntIndex];
       const itemValue = argObjectFromStack.fieldValue.get(itemKey);
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          // Reminder: This prevents a crash relating to Symbol() keys.
-          // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
-          helperGlobals.getStringFromArg(itemKey),
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              // Reminder: This prevents a crash relating to Symbol() keys.
+              // This call is happening here, rather than in the lower modules to keep the type checks and processing low.
+              helperGlobals.getStringFromArg(itemKey),
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };

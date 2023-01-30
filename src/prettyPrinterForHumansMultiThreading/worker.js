@@ -41,11 +41,9 @@ class _helperLocal {
         )
     );
     const arrayToReturn = new Array(arrayOfStringNamesInOrder.length);
-    for (
-      let itemIntIndex = 0, intLength = arrayOfStringNamesInOrder.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = arrayOfStringNamesInOrder.length;
+    while ( ++itemIntIndex < intLength ) {
       const itemStringName = arrayOfStringNamesInOrder[itemIntIndex];
       if (setOfStringNamesFromCallback.has(itemStringName)) {
         arrayToReturn[itemIntIndex] = argMessageReceived[itemStringName];

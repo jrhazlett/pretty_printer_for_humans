@@ -81,23 +81,21 @@ export default class helperProcessSet {
       argObjectFromStack.fieldValue
     );
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
-    for (
-      let itemIntIndex = arrayFromSet.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+
+    let itemIntIndex = arrayFromSet.length
+    while ( --itemIntIndex >= 0 ) {
       const itemValue = arrayFromSet[itemIntIndex];
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          itemIntIndex,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              itemIntIndex,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -118,23 +116,20 @@ export default class helperProcessSet {
       argObjectFromStack.fieldValue
     );
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
-    for (
-      let itemIntIndex = arrayFromSet.length - 1, intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = arrayFromSet.length, intLength = 0;
+    while ( --itemIntIndex >= 0 ) {
       let itemValue = arrayFromSet[itemIntIndex];
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          itemIntIndex,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              itemIntIndex,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -155,11 +150,9 @@ export default class helperProcessSet {
     const arrayFromSet = Array.from(argSet);
     const arrayFromSetPrimitive = [];
     const arrayFromSetComplex = [];
-    for (
-      let itemIntIndex = 0, intLength = arrayFromSet.length;
-      itemIntIndex < intLength;
-      itemIntIndex++
-    ) {
+    let itemIntIndex = -1
+    const intLength = arrayFromSet.length;
+    while ( ++itemIntIndex < intLength ) {
       const item = arrayFromSet[itemIntIndex];
       if (helperEnumDataTypes.isComplexArg(item)) {
         arrayFromSetComplex.push(item);

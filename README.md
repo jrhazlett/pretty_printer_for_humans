@@ -795,6 +795,12 @@ being **meant** for human consumption and navigation.
 
 ## Updates and fixes
 
+### Ver. 1.2.1
+
+Swapped out 'for' loops with 'while' loops for the performance boost.
+
+No interface changes.
+
 ### Ver. 1.1.9
 
 Added symbol support in cases where a path fails and needs to return printable info

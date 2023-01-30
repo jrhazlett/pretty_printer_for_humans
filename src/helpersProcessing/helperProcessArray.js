@@ -77,24 +77,20 @@ export default class helperProcessArray {
     argObjectFromStack
   ) => {
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
-    for (
-      let itemIntIndex = argObjectFromStack.fieldValue.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+    let itemIntIndex = argObjectFromStack.fieldValue.length
+    while ( --itemIntIndex >= 0 ) {
       const itemValue = argObjectFromStack.fieldValue[itemIntIndex];
       helperProcessChild.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          itemIntIndex,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              itemIntIndex,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
@@ -112,24 +108,21 @@ export default class helperProcessArray {
     argObjectFromStack
   ) => {
     const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
-    for (
-      let itemIntIndex = argObjectFromStack.fieldValue.length - 1,
-        intLength = 0;
-      itemIntIndex >= intLength;
-      itemIntIndex--
-    ) {
+
+    let itemIntIndex = argObjectFromStack.fieldValue.length
+    while ( --itemIntIndex >= 0 ) {
       let itemValue = argObjectFromStack.fieldValue[itemIntIndex];
       helperProcessChildComplexLast.processChild(
-        argArrayStackToUpdate,
-        argHelperCircularReferences,
-        argHelperOptions,
-        new HelperObjectForStack(
-          helperEnumDataTypes.getEnumDataType(itemValue),
-          intLayersIn,
-          itemIntIndex,
-          itemValue
-        ),
-        argObjectFromStack
+          argArrayStackToUpdate,
+          argHelperCircularReferences,
+          argHelperOptions,
+          new HelperObjectForStack(
+              helperEnumDataTypes.getEnumDataType(itemValue),
+              intLayersIn,
+              itemIntIndex,
+              itemValue
+          ),
+          argObjectFromStack
       );
     }
   };
