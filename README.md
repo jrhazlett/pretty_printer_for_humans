@@ -18,14 +18,14 @@ to the right place.
 
 Top features:
 
-- Automatic indentation
-- Auto-sort all keys ( can also sort data so complex objects display below simple entries )
-- No recursion limit
-- No external dependencies
-- Auto-handles circular references by default
-- Multi-threading support
-- Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
-- Map support
+-   Automatic indentation
+-   Auto-sort all keys ( can also sort data so complex objects display below simple entries )
+-   No recursion limit
+-   No external dependencies
+-   Auto-handles circular references by default
+-   Multi-threading support
+-   Set number of layers to display ( layers beyond set layer will auto-summarize; ie `{ ... }` )
+-   Map support
 
 Note: Update log at bottom of document
 
@@ -39,11 +39,11 @@ npm i pretty_printer_for_humans
 
 ## Definitions
 
-- 'The stack' - When I refer to this, I mean the custom stack used to process the entire data packages in
-  prettyPrinterForHumans.
-- 'The main function' - This refers to pformat() if its not clear within the context of its use.
-- 'Function' - Technically every 'function' in this library is a method, but I think more people will understand
-  'function' than method.
+-   'The stack' - When I refer to this, I mean the custom stack used to process the entire data packages in
+    prettyPrinterForHumans.
+-   'The main function' - This refers to pformat() if its not clear within the context of its use.
+-   'Function' - Technically every 'function' in this library is a method, but I think more people will understand
+    'function' than method.
 
 ## Public functions
 
@@ -359,9 +359,9 @@ Note: The resulting array _should_ still be sorted.
 Returns the stored value accessed via a given path.
 Yes, you can include array indexes. How they work: <br>
 
-- They can be string or number
-- **Must** be convertible to an int. Decimal values will be treated like 'bad keys'.
-- All keys are case-sensitive
+-   They can be string or number
+-   **Must** be convertible to an int. Decimal values will be treated like 'bad keys'.
+-   All keys are case-sensitive
 
 ```
 import prettyPrinterForHumans from "pretty_printer_for_humans"
@@ -481,8 +481,8 @@ Returns true if the path exists within arg's structure, and false if it doesn't.
 
 This uses similar pathing logic as `getValueAtPathInArg()`:
 
-- Strings are tolerated for array indexes (but not decimal values)
-- Case-sensitive
+-   Strings are tolerated for array indexes (but not decimal values)
+-   Case-sensitive
 
 `isPathInArgAsync( argArrayPath, arg )`
 
@@ -502,11 +502,11 @@ is to keep from colliding any recursion limits, and is generally more processing
 Each object popped off the stack contains a value. The printer checks various attributes for a couple of
 characteristics:
 
-- Is the value an array?
-- Is the value an object?
-- Is the value an error object?
-- Is the value a promise?
-- Is the value a basic type? (ie string or number)
+-   Is the value an array?
+-   Is the value an object?
+-   Is the value an error object?
+-   Is the value a promise?
+-   Is the value a basic type? (ie string or number)
 
 If the value is either an array or a basic object, then the printer will check it for children and move those to the
 stack for processing.
@@ -613,14 +613,14 @@ it returns true. If false, it will add the object to the set and then return fal
 
 ## Optimizations
 
-- 'static' is used whenever possible; this keeps various defs down to one memory entry.
-- If the anticipated array's size is known ahead of time, then its defined immediately.
-- For loops store array lengths ahead of iterating ( objects also benefit from their equivalent ).
-- Different approaches were benchmarked, and the code reflects the fastest approach tested.
-- An independent stack is used for recursion; This cuts out a lot of processing overhead, and prevents running into
-  the limit.
-- Switch statements are used whenever possible.
-- Repeating comparisons rely on ints rather than re-evaluating values / scanning strings.
+-   'static' is used whenever possible; this keeps various defs down to one memory entry.
+-   If the anticipated array's size is known ahead of time, then its defined immediately.
+-   For loops store array lengths ahead of iterating ( objects also benefit from their equivalent ).
+-   Different approaches were benchmarked, and the code reflects the fastest approach tested.
+-   An independent stack is used for recursion; This cuts out a lot of processing overhead, and prevents running into
+    the limit.
+-   Switch statements are used whenever possible.
+-   Repeating comparisons rely on ints rather than re-evaluating values / scanning strings.
 
 #### Garbage collection / memory leaks
 
@@ -646,8 +646,8 @@ the actual `pformat()` function, rather than being distributed across multiple m
 
 This is both the primary interface for the library and where it manages:
 
-- The overall stack
-- Formatting for output
+-   The overall stack
+-   Formatting for output
 
 #### src/helpersPrettyPrinter/helperOptions.js
 
@@ -690,29 +690,29 @@ everything follows these formats:
 
 Classes:
 
-- Name outline: ( 'H/helper' )( descriptive name )
-- All have 'helper' at the beginning. If the 'H' is captialized, then its meant to be instantiated, otherwise its
-  static.
-- Classes exist in pretty much all helper modules. The reason for this is to avoid order-sensitive execution, which
-  makes reading the code later messy if this isn't done ahead of time.
+-   Name outline: ( 'H/helper' )( descriptive name )
+-   All have 'helper' at the beginning. If the 'H' is captialized, then its meant to be instantiated, otherwise its
+    static.
+-   Classes exist in pretty much all helper modules. The reason for this is to avoid order-sensitive execution, which
+    makes reading the code later messy if this isn't done ahead of time.
 
 Functions / Methods:
 
-- Name outline: ( verb )( data type )( descriptive name ).
-- The verb tends to be: get / load (into object) / pop / set.
-- If a public function doesn't seem to return anything, then I usually set it to return 'this' by default, to support
-  chaining calls.
+-   Name outline: ( verb )( data type )( descriptive name ).
+-   The verb tends to be: get / load (into object) / pop / set.
+-   If a public function doesn't seem to return anything, then I usually set it to return 'this' by default, to support
+    chaining calls.
 
 Variables:
 
-- Name outline: ( arg / item? )( data type )( descriptive name ).
-- The 'arg' prefix is meant to identify function arguments within function blocks.
-- 'item' is a keyword I like using to indicate if a variable is expected to be unique for each loop iteration
-- Intended data types are included in variables names because IDEs typically show these in tool tips. Actual
-  desciption blocks usually require more steps to view. This is very much intended to be a: "Let the software handle
-  the minutae" philosophy.
-- If the data type isn't mentioned, then the variable is meant to be 'any'.
-- Any argument that ends with 'ToUpdate' will be changed during the execution of the associated function.
+-   Name outline: ( arg / item? )( data type )( descriptive name ).
+-   The 'arg' prefix is meant to identify function arguments within function blocks.
+-   'item' is a keyword I like using to indicate if a variable is expected to be unique for each loop iteration
+-   Intended data types are included in variables names because IDEs typically show these in tool tips. Actual
+    desciption blocks usually require more steps to view. This is very much intended to be a: "Let the software handle
+    the minutae" philosophy.
+-   If the data type isn't mentioned, then the variable is meant to be 'any'.
+-   Any argument that ends with 'ToUpdate' will be changed during the execution of the associated function.
 
 ## Questions
 
@@ -794,6 +794,10 @@ Really, 'pretty_printer' was already taken. I decided to add the 'for_humans' bi
 being **meant** for human consumption and navigation.
 
 ## Updates and fixes
+
+### Ver. 1.2.2
+
+Code cleanup. No features changed / added.
 
 ### Ver. 1.2.1
 
@@ -892,8 +896,8 @@ of their directly associated functions.
 Changed:
 All paths handled in-library are now arrays. This change addresses a few risks:
 
-- The resulting paths no longer require type conversions
-- Avoids issues which could block string conversions
+-   The resulting paths no longer require type conversions
+-   Avoids issues which could block string conversions
 
 `getArrayOfStringsPathsInArg()` is now `getArrayOfPathsInArg()`
 

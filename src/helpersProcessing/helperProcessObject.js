@@ -11,254 +11,254 @@ import helperProcessChild from "../helpersProcessingChildren/helperProcessChild.
 import helperProcessChildComplexLast from "../helpersProcessingChildren/helperProcessChildComplexLast.js";
 
 export default class helperProcessObject {
-  /**
-   * Process object's keys and associated children
-   *
-   * @param {[]} argArrayStackToUpdate
-   * @param {HelperCircularReferences} argHelperCircularReferences
-   * @param {HelperOptions} argHelperOptions
-   * @param {HelperObjectForStack} argObjectFromStack
-   * */
-  static processObject = (
-    argArrayStackToUpdate,
-    argHelperCircularReferences,
-    argHelperOptions,
-    argObjectFromStack
-  ) => {
-    const enumSortOptions = HelperOptions.fieldEnumSortOptions;
-    switch (argHelperOptions.argEnumSortOption) {
-      case enumSortOptions.fieldOptionPrintAlphabetical:
-        helperProcessObject._processObjectPrintAlphabetical(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          argObjectFromStack
-        );
-        break;
-      case enumSortOptions.fieldOptionPrintComplexLast:
-        helperProcessObject._processObjectPrintComplexLast(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          argObjectFromStack
-        );
-        break;
-      case enumSortOptions.fieldOptionPrintOriginalOrder:
-        helperProcessObject._processObjectPrintOriginalOrder(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          argObjectFromStack
-        );
-        break;
-      //
-      // If no option is selected, then default to complex objects last
-      //
-      default:
-        helperProcessObject._processObjectPrintComplexLast(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          argObjectFromStack
-        );
-        break;
-    }
-  };
-  //
-  // Private
-  //
-  /**
-   * @param {[]} argArrayStackToUpdate
-   * @param {HelperCircularReferences} argHelperCircularReferences
-   * @param {HelperOptions} argHelperOptions
-   * @param {HelperObjectForStack} argObjectFromStack
-   * */
-  static _processObjectPrintAlphabetical = (
-    argArrayStackToUpdate,
-    argHelperCircularReferences,
-    argHelperOptions,
-    argObjectFromStack
-  ) => {
-    let arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive(
-      Object.keys(argObjectFromStack.fieldValue)
-    );
-    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
+    /**
+     * Process object's keys and associated children
+     *
+     * @param {HelperObjectForStack[]} argArrayStackToUpdate
+     * @param {HelperCircularReferences} argHelperCircularReferences
+     * @param {HelperOptions} argHelperOptions
+     * @param {HelperObjectForStack} argObjectFromStack
+     * */
+    static processObject = (
+        argArrayStackToUpdate,
+        argHelperCircularReferences,
+        argHelperOptions,
+        argObjectFromStack
+    ) => {
+        const enumSortOptions = HelperOptions.fieldEnumSortOptions;
+        switch (argHelperOptions.argEnumSortOption) {
+            case enumSortOptions.fieldOptionPrintAlphabetical:
+                helperProcessObject._processObjectPrintAlphabetical(
+                    argArrayStackToUpdate,
+                    argHelperCircularReferences,
+                    argHelperOptions,
+                    argObjectFromStack
+                );
+                break;
+            case enumSortOptions.fieldOptionPrintComplexLast:
+                helperProcessObject._processObjectPrintComplexLast(
+                    argArrayStackToUpdate,
+                    argHelperCircularReferences,
+                    argHelperOptions,
+                    argObjectFromStack
+                );
+                break;
+            case enumSortOptions.fieldOptionPrintOriginalOrder:
+                helperProcessObject._processObjectPrintOriginalOrder(
+                    argArrayStackToUpdate,
+                    argHelperCircularReferences,
+                    argHelperOptions,
+                    argObjectFromStack
+                );
+                break;
+            //
+            // If no option is selected, then default to complex objects last
+            //
+            default:
+                helperProcessObject._processObjectPrintComplexLast(
+                    argArrayStackToUpdate,
+                    argHelperCircularReferences,
+                    argHelperOptions,
+                    argObjectFromStack
+                );
+                break;
+        }
+    };
     //
-    // Go through each key and process the associated value
+    // Private
     //
-    let itemIntIndex = arrayOfKeys.length
-    while ( --itemIntIndex >= 0 ) {
-      const itemKey = arrayOfKeys[itemIntIndex];
-      const itemValue = argObjectFromStack.fieldValue[itemKey];
-      helperProcessChild.processChild(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          new HelperObjectForStack(
-              helperEnumDataTypes.getEnumDataType(itemValue),
-              intLayersIn,
-              itemKey,
-              itemValue
-          ),
-          argObjectFromStack
-      );
-    }
-  };
+    /**
+     * @param {HelperObjectForStack[]} argArrayStackToUpdate
+     * @param {HelperCircularReferences} argHelperCircularReferences
+     * @param {HelperOptions} argHelperOptions
+     * @param {HelperObjectForStack} argObjectFromStack
+     * */
+    static _processObjectPrintAlphabetical = (
+        argArrayStackToUpdate,
+        argHelperCircularReferences,
+        argHelperOptions,
+        argObjectFromStack
+    ) => {
+        let arrayOfKeys =
+            helperFormatting.getArrayOfStringsSortedCaseInsensitive(
+                Object.keys(argObjectFromStack.fieldValue)
+            );
+        const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
+        //
+        // Go through each key and process the associated value
+        //
+        let itemIntIndex = arrayOfKeys.length;
+        while (--itemIntIndex >= 0) {
+            const itemKey = arrayOfKeys[itemIntIndex];
+            const itemValue = argObjectFromStack.fieldValue[itemKey];
+            helperProcessChild.processChild(
+                argArrayStackToUpdate,
+                argHelperCircularReferences,
+                argHelperOptions,
+                new HelperObjectForStack(
+                    helperEnumDataTypes.getEnumDataType(itemValue),
+                    intLayersIn,
+                    itemKey,
+                    itemValue
+                ),
+                argObjectFromStack
+            );
+        }
+    };
 
-  /**
-   * @param {[]} argArrayStackToUpdate
-   * @param {HelperCircularReferences} argHelperCircularReferences
-   * @param {HelperOptions} argHelperOptions
-   * @param {HelperObjectForStack} argObjectFromStack
-   * */
-  static _processObjectPrintComplexLast = (
-    argArrayStackToUpdate,
-    argHelperCircularReferences,
-    argHelperOptions,
-    argObjectFromStack
-  ) => {
-    const arrayOfKeys = helperFormatting.getArrayOfStringsSortedCaseInsensitive(
-      Object.keys(argObjectFromStack.fieldValue)
-    );
-    const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
-    //
-    // Route keys to complex and simple
-    //
-    let arrayOfPairsKeysAndTypesComplex = [];
-    let arrayOfPairsKeysAndTypesSimple = [];
-    let itemIntIndex
-    if (argHelperOptions.argBoolHandleCircularReferences) {
-      itemIntIndex = -1
-      const intLength = arrayOfKeys.length
-      while ( ++itemIntIndex < intLength ) {
-        const itemKey = arrayOfKeys[itemIntIndex];
-        helperProcessObject._routeKeysToComplexOrSimple(
-            arrayOfKeys,
-            arrayOfPairsKeysAndTypesComplex,
-            arrayOfPairsKeysAndTypesSimple,
-            itemKey,
-            argObjectFromStack
-        );
-      }
-    } else {
-      let itemIntIndex = -1
-      const intLength = arrayOfKeys.length
-      while ( ++itemIntIndex < intLength ) {
-        helperProcessObject._routeKeysToComplexOrSimple(
-            arrayOfKeys,
-            arrayOfPairsKeysAndTypesComplex,
-            arrayOfPairsKeysAndTypesSimple,
-            arrayOfKeys[itemIntIndex],
-            argObjectFromStack
-        );
-      }
-    }
-    //
-    // Append complex objects to stack
-    //
-    itemIntIndex = arrayOfPairsKeysAndTypesComplex.length
-    while ( --itemIntIndex >= 0 ) {
-      const [itemKey, itemValue, itemEnumDataType] =
-          arrayOfPairsKeysAndTypesComplex[itemIntIndex];
-      helperProcessChildComplexLast.processChild(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          new HelperObjectForStack(
-              itemEnumDataType,
-              intLayersIn,
-              itemKey,
-              itemValue
-          ),
-          argObjectFromStack
-      );
-    }
-    //
-    // Append simple objects to output
-    //
-    itemIntIndex = arrayOfPairsKeysAndTypesSimple.length
-    while ( --itemIntIndex >= 0 ) {
-      const [itemKey, itemValue, itemEnumDataType] =
-          arrayOfPairsKeysAndTypesSimple[itemIntIndex];
-      helperProcessChildComplexLast.processChild(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          new HelperObjectForStack(
-              itemEnumDataType,
-              intLayersIn,
-              itemKey,
-              itemValue
-          ),
-          argObjectFromStack
-      );
-    }
-  };
+    /**
+     * @param {HelperObjectForStack[]} argArrayStackToUpdate
+     * @param {HelperCircularReferences} argHelperCircularReferences
+     * @param {HelperOptions} argHelperOptions
+     * @param {HelperObjectForStack} argObjectFromStack
+     * */
+    static _processObjectPrintComplexLast = (
+        argArrayStackToUpdate,
+        argHelperCircularReferences,
+        argHelperOptions,
+        argObjectFromStack
+    ) => {
+        const arrayOfKeys =
+            helperFormatting.getArrayOfStringsSortedCaseInsensitive(
+                Object.keys(argObjectFromStack.fieldValue)
+            );
+        const intLayersIn = argObjectFromStack.fieldIntLayersIn + 1;
+        //
+        // Route keys to complex and simple
+        //
+        let arrayOfPairsKeysAndTypesComplex = [];
+        let arrayOfPairsKeysAndTypesSimple = [];
+        let itemIntIndex;
+        if (argHelperOptions.argBoolHandleCircularReferences) {
+            itemIntIndex = -1;
+            const intLength = arrayOfKeys.length;
+            while (++itemIntIndex < intLength) {
+                const itemKey = arrayOfKeys[itemIntIndex];
+                helperProcessObject._routeKeysToComplexOrSimple(
+                    arrayOfKeys,
+                    arrayOfPairsKeysAndTypesComplex,
+                    arrayOfPairsKeysAndTypesSimple,
+                    itemKey,
+                    argObjectFromStack
+                );
+            }
+        } else {
+            let itemIntIndex = -1;
+            const intLength = arrayOfKeys.length;
+            while (++itemIntIndex < intLength)
+                helperProcessObject._routeKeysToComplexOrSimple(
+                    arrayOfKeys,
+                    arrayOfPairsKeysAndTypesComplex,
+                    arrayOfPairsKeysAndTypesSimple,
+                    arrayOfKeys[itemIntIndex],
+                    argObjectFromStack
+                );
+        }
+        //
+        // Append complex objects to stack
+        //
+        itemIntIndex = arrayOfPairsKeysAndTypesComplex.length;
+        while (--itemIntIndex >= 0) {
+            const [itemKey, itemValue, itemEnumDataType] =
+                arrayOfPairsKeysAndTypesComplex[itemIntIndex];
+            helperProcessChildComplexLast.processChild(
+                argArrayStackToUpdate,
+                argHelperCircularReferences,
+                argHelperOptions,
+                new HelperObjectForStack(
+                    itemEnumDataType,
+                    intLayersIn,
+                    itemKey,
+                    itemValue
+                ),
+                argObjectFromStack
+            );
+        }
+        //
+        // Append simple objects to output
+        //
+        itemIntIndex = arrayOfPairsKeysAndTypesSimple.length;
+        while (--itemIntIndex >= 0) {
+            const [itemKey, itemValue, itemEnumDataType] =
+                arrayOfPairsKeysAndTypesSimple[itemIntIndex];
+            helperProcessChildComplexLast.processChild(
+                argArrayStackToUpdate,
+                argHelperCircularReferences,
+                argHelperOptions,
+                new HelperObjectForStack(
+                    itemEnumDataType,
+                    intLayersIn,
+                    itemKey,
+                    itemValue
+                ),
+                argObjectFromStack
+            );
+        }
+    };
 
-  /**
-   * @param {[]} argArrayOfKeys
-   * @param {[]} argArrayOfPairsKeysValuesTypesComplexToUpdate
-   * @param {[]} argArrayOfPairsKeysValuesTypesSimpleToUpdate
-   * @param {any} argKey
-   * @param {object} argObjectFromStack
-   * */
-  static _routeKeysToComplexOrSimple = (
-    argArrayOfKeys,
-    argArrayOfPairsKeysValuesTypesComplexToUpdate,
-    argArrayOfPairsKeysValuesTypesSimpleToUpdate,
-    argKey,
-    argObjectFromStack
-  ) => {
-    const itemValue = argObjectFromStack.fieldValue[argKey];
-    const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
-    if (helperEnumDataTypes.isComplexEnumType(itemEnumType)) {
-      argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
+    /**
+     * @param {any[]} argArrayOfKeys
+     * @param {(any|any|number)[]} argArrayOfPairsKeysValuesTypesComplexToUpdate
+     * @param {[]} argArrayOfPairsKeysValuesTypesSimpleToUpdate
+     * @param {any} argKey
+     * @param {object} argObjectFromStack
+     * */
+    static _routeKeysToComplexOrSimple = (
+        argArrayOfKeys,
+        argArrayOfPairsKeysValuesTypesComplexToUpdate,
+        argArrayOfPairsKeysValuesTypesSimpleToUpdate,
         argKey,
-        itemValue,
-        itemEnumType,
-      ]);
-    } else {
-      argArrayOfPairsKeysValuesTypesSimpleToUpdate.push([
-        argKey,
-        itemValue,
-        itemEnumType,
-      ]);
-    }
-  };
+        argObjectFromStack
+    ) => {
+        const itemValue = argObjectFromStack.fieldValue[argKey];
+        const itemEnumType = helperEnumDataTypes.getEnumDataType(itemValue);
+        if (helperEnumDataTypes.isComplexEnumType(itemEnumType))
+            argArrayOfPairsKeysValuesTypesComplexToUpdate.push([
+                argKey,
+                itemValue,
+                itemEnumType,
+            ]);
+        else
+            argArrayOfPairsKeysValuesTypesSimpleToUpdate.push([
+                argKey,
+                itemValue,
+                itemEnumType,
+            ]);
+    };
 
-  /**
-   * @param {[]} argArrayStackToUpdate
-   * @param {HelperCircularReferences} argHelperCircularReferences
-   * @param {HelperOptions} argHelperOptions
-   * @param {HelperObjectForStack} argObjectFromStack
-   * */
-  static _processObjectPrintOriginalOrder = (
-    argArrayStackToUpdate,
-    argHelperCircularReferences,
-    argHelperOptions,
-    argObjectFromStack
-  ) => {
-    const arrayOfKeys = Object.keys(argObjectFromStack.fieldValue);
-    const intLayersInt = argObjectFromStack.fieldIntLayersIn + 1;
-    //
-    // Go through each key and process the associated value
-    //
-    let itemIntIndex = arrayOfKeys.length
-    while ( --itemIntIndex >= 0 ) {
-      const itemKey = arrayOfKeys[itemIntIndex];
-      const itemValue = argObjectFromStack.fieldValue[itemKey];
-      helperProcessChild.processChild(
-          argArrayStackToUpdate,
-          argHelperCircularReferences,
-          argHelperOptions,
-          new HelperObjectForStack(
-              helperEnumDataTypes.getEnumDataType(itemValue),
-              intLayersInt,
-              itemKey,
-              itemValue
-          ),
-          argObjectFromStack
-      );
-    }
-  };
+    /**
+     * @param {HelperObjectForStack[]} argArrayStackToUpdate
+     * @param {HelperCircularReferences} argHelperCircularReferences
+     * @param {HelperOptions} argHelperOptions
+     * @param {HelperObjectForStack} argObjectFromStack
+     * */
+    static _processObjectPrintOriginalOrder = (
+        argArrayStackToUpdate,
+        argHelperCircularReferences,
+        argHelperOptions,
+        argObjectFromStack
+    ) => {
+        const arrayOfKeys = Object.keys(argObjectFromStack.fieldValue);
+        const intLayersInt = argObjectFromStack.fieldIntLayersIn + 1;
+        //
+        // Go through each key and process the associated value
+        //
+        let itemIntIndex = arrayOfKeys.length;
+        while (--itemIntIndex >= 0) {
+            const itemKey = arrayOfKeys[itemIntIndex];
+            const itemValue = argObjectFromStack.fieldValue[itemKey];
+            helperProcessChild.processChild(
+                argArrayStackToUpdate,
+                argHelperCircularReferences,
+                argHelperOptions,
+                new HelperObjectForStack(
+                    helperEnumDataTypes.getEnumDataType(itemValue),
+                    intLayersInt,
+                    itemKey,
+                    itemValue
+                ),
+                argObjectFromStack
+            );
+        }
+    };
 }
