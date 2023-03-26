@@ -1,4 +1,4 @@
 "use strict";
 
-import prettyPrinterForHumans from "./src/prettyPrinterForHumans.js";
+import * as prettyPrinterForHumans from "./src/prettyPrinterForHumans.js";
 export default prettyPrinterForHumans;

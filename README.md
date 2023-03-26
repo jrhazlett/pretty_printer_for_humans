@@ -714,86 +714,13 @@ Variables:
 -   If the data type isn't mentioned, then the variable is meant to be 'any'.
 -   Any argument that ends with 'ToUpdate' will be changed during the execution of the associated function.
 
-## Questions
-
-### Why is it pure Javascript?
-
-This actually grew out of a different library I'm working on releasing. The same rules for that library also apply
-here: consistent code across all modules. IDEs tend to be friendly enough with type annotation that TypeScript's
-return on value is diminished a bit. That and I have yet to find an effective solution for creating web workers that
-can both run TypeScript and import other TypeScript modules.
-
-Also, the whole library is meant to be accessible and modded ( hence the MIT license ).
-
-### This code violates X style, is this intentional?
-
-All formatting runs through the 'prettier' ( https://prettier.io/ ) script, before uploading.
-
-Beyond this, each language has their own situational standards with surprisingly little cross-over with other
-languages. I do what makes sense to get 'as close as reasonable'. There are also things absent from various style
-guides around actually organizing large amounts of code, which I feel should exist.
-
-### Why did you optimize this code?
-
-The larger the package passed to this library's main function, the more processing that needs to happen. Ideally, this
-library should generate results as fast as reasonable.
-
-### Why do some functions make changes to their arguments, instead of returning values?
-
-My general top rules for code is 'be practical' and 'be consistent'. A returned value tends to imply a newly created
-value. If the result **is** one of the arguments, then just mark that the argument will be changed during the
-function's execution with the "ToUpdate" suffix. In earlier iterations of the code, there were actually multiple
-arguments updated, but I managed to trim those down.
-
-Also, the 'const' keyword in Javascript really just means the variable's memory address can't change. The contents of
-what's in that memory address can. Ideally, a developer wants to use this keyword as much as possible, this
-incentivizes updating arguments within functions rather than doing what amounts to 'reassigning the variable to
-itself.' For performance reasons, this library proactively avoids cloning its own data structures.
-
-### Why did you elect to print warnings for Promises rather than just have the library wait for them to complete?
-
-This is about 'separation of concerns'. This library is a debugging tool and not meant to fill a role in
-production-ready code. If the library prints a warning about a promise, this most likely means the external code isn't
-properly resolving all the promises properly, ahead of trying to print it. The developer doesn't want to be in a
-position where they think the data is resolving properly **because** of the printer.
-
-### I see 'async' wrappers, but the core of this library is fundamentally synchronized; why?
-
-Two big risks govern this design choice:
-
-1. Intermingling external and internal promises: The library does not resolve incoming promises by design. This is so
-   developers can know if certain promises are getting resolved or not. If the main printing algorithm used its own
-   promises, this would require more overhead to distinguish between the two.
-
-2. Possible performance loss compared to sync execution: On a past Rust project, there was a 'make everything async'
-   mentality. Async does not come without a processing cost. In handling basic data, async execution often under-
-   performed compared to sync execution. Since Javascript overall is less performant than Rust, the performance loss
-   would likely be more noticeable.
-
-In this case, at the very least promises would need to be created, more data structures would be necessary to manage
-the data in chunks, and then there would need to be calls to polling functions to make sure all promises resolved
-themselves before going to screen.
-
-Adding the option to make the entire script non-blocking and another option to offload the task to another thread
-should be sufficient for minimizing any potential performance risk this script might pose.
-
-### Why doesn't this include external libraries?
-
-In a perfect world, this library _should_ be a 'one and done' package. I'm unlikely to have a lot of opportunities to
-update this after my current circumstances change. The more complicated this package, the more likely it is to break
-in the future, so I'm focusing on keeping it robust as possible.
-
-### What IDE did you develop this library with?
-
-WebStorm by JetBrains
-https://www.jetbrains.com/webstorm/
-
-### What's the story behind the library's name?
-
-Really, 'pretty_printer' was already taken. I decided to add the 'for_humans' bit to distinguish this library for
-being **meant** for human consumption and navigation.
-
 ## Updates and fixes
+
+### Ver. 1.2.3
+
+-   By popular demand, the class structure of this package was removed
+-   Removed extraneous comments
+-   Shortened readme
 
 ### Ver. 1.2.2
 

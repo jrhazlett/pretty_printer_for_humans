@@ -14,11 +14,11 @@ It uses these names to construct an array of argument values.
 It then unpacks these values into the callback.
 */
 import { parentPort } from "node:worker_threads";
-import helperGlobals from "../helpersSupport/helperGlobals.js";
+import * as helperGlobals from "../helpersSupport/helperGlobals.js";
 
 import prettyPrinterForHumans from "../../src/prettyPrinterForHumans.js";
 
-class _helperLocal {
+function HelperLocal() {
     /**
      * This function...
      * Grabs all the arguments with the 'arg' prefix from the callback
@@ -29,9 +29,7 @@ class _helperLocal {
      * @param {Object} argMessageReceived
      * @returns []
      * */
-    static getArrayOfArgs = (argCallback, argMessageReceived) => {
-        // Reminder: This attribute is necessary because the community seems really fuzzy about whether
-        // or not the properties of a given object will always maintain their original order.
+    this.getArrayOfArgs = (argCallback, argMessageReceived) => {
         let arrayOfStringNamesInOrder =
             argMessageReceived.argArrayOfKeysInOrder;
         let setOfStringNamesFromCallback = new Set(
@@ -60,16 +58,14 @@ class _helperLocal {
      * @param {Object} argMessageReceived
      * @returns Function
      * */
-    static getCallback = (argMessageReceived) =>
+    this.getCallback = (argMessageReceived) =>
         prettyPrinterForHumans[argMessageReceived.argStringNameForFunction];
 }
+const helperLocal = new HelperLocal();
 
 parentPort.once(`message`, (argMessageReceived) => {
-    const callback = _helperLocal.getCallback(argMessageReceived);
-    //
-    // Unpack the array of arguments into the callback
-    //
+    const callback = helperLocal.getCallback(argMessageReceived);
     parentPort.postMessage(
-        callback(..._helperLocal.getArrayOfArgs(callback, argMessageReceived))
+        callback(...helperLocal.getArrayOfArgs(callback, argMessageReceived))
     );
 });
