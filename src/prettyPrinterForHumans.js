@@ -150,7 +150,7 @@ export const isKeyInArg = (arg, argKey, argBoolCaseSensitive = true) => {
  * @param {boolean} argBoolCaseSensitive
  * */
 export const _isKeyInObject = (argObject, argKey, argBoolCaseSensitive) => {
-    if (argBoolCaseSensitive) return argObject.hasOwnProperty(argKey);
+    if (argBoolCaseSensitive) return Object.hasOwnProperty.bind( argObject )(argKey);
     const stringKey = `${argKey}`;
     const arrayOfKeys = Object.keys(argObject);
     let itemIntIndex = -1;
@@ -206,7 +206,7 @@ export const isPathInArg = (argArrayPath, arg) => {
                 } else return false;
                 break;
             case helperEnumDataTypes.fieldObject:
-                if (item.hasOwnProperty(itemKey)) item = item[itemKey];
+                if (Object.hasOwnProperty.bind( item )(itemKey)) item = item[itemKey];
                 else return false;
                 break;
             default:

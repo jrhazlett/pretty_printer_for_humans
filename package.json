@@ -1,6 +1,6 @@
 {
     "name": "pretty_printer_for_humans",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "author": "James Hazlett <james.hazlett.npm@gmail.com>",
     "url": "https://github.com/jrhazlett/pretty_printer_for_humans",
     "description": "Library for generating human-friendly strings from a given data structure",

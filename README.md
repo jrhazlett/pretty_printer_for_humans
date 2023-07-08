@@ -783,6 +783,12 @@ Set(
 )
 ```
 
+### Ver. 1.2.4
+
+Swapped <object>.hasOwnProperty() calls with Object.hasOwnProperty.bind()(<key>)
+
+This prevents errors where the library will attempt to make this call on an object which lacks the function.
+
 ### Ver. 1.1.7
 
 Added Map support. This overrides the library's original behavior, where it originally regarded them

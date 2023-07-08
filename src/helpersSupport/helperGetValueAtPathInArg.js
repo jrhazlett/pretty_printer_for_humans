@@ -135,7 +135,7 @@ const getValueAtPathInArgObject = (
     argKey,
     argObject
 ) => {
-    if (argObject.hasOwnProperty(argKey)) {
+    if (Object.hasOwnProperty.bind( argObject )(argKey)) {
         argArrayOfKeysThatExistToUpdate.push(argKey);
         return argObject[argKey];
     } else {
